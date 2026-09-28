@@ -515,137 +515,6 @@
       padding: 4px 0;
     }
 
-    /* Practice Documents Archive */
-    .doc-item {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      transition: all 0.2s;
-    }
-
-    .doc-item:hover {
-      border-color: rgba(56, 189, 248, 0.3);
-      background: rgba(20, 30, 50, 0.8);
-    }
-
-    .doc-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .doc-title-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .doc-icon {
-      font-size: 16px;
-      color: var(--accent);
-    }
-
-    .doc-date {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .doc-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .doc-badge.complete {
-      background: rgba(52, 211, 153, 0.15);
-      color: var(--success);
-      border: 1px solid rgba(52, 211, 153, 0.3);
-    }
-
-    .doc-badge.pending {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .doc-meta {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 4px;
-      display: flex;
-      gap: 12px;
-    }
-
-    .doc-content {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      display: none;
-    }
-
-    .doc-content.open {
-      display: block;
-    }
-
-    .doc-pre {
-      background: rgba(0, 0, 0, 0.45);
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #e2e8f0;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 180px;
-      overflow-y: auto;
-    }
-
-    .doc-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 8px;
-    }
-
-    .copy-btn {
-      padding: 5px 12px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--accent);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .copy-btn:hover {
-      background: var(--accent);
-      color: #0b0f19;
-    }
-
-    .empty-docs {
-      text-align: center;
-      padding: 24px 16px;
-      color: var(--text-dim);
-      font-size: 13px;
-    }
-
-    .empty-docs-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-      opacity: 0.6;
-    }
-
     /* Fixed Bottom Action Bar */
     .bottom-bar {
       position: fixed;
@@ -726,8 +595,8 @@
         </div>
       </div>
       <h1 data-i18n="title">Signals</h1>
-      <p data-i18n="subtitle">터치와 소리로 익히는 한글·영문 모르스 부호</p>
-      <div class="header-version" id="header_version">v0.2.0</div>
+      <p data-i18n="subtitle">터치,소리,게임으로 익히는 한글·영문 모르스 부호</p>
+      <div class="header-version" id="header_version">v0.9.0</div>
     </div>
 
     <!-- Error Alert Banner -->
@@ -885,7 +754,7 @@
           <div class="test-title" data-i18n="audioPreviewTitle">모스 리듬 미리듣기 (Web Audio)</div>
           <span id="test_status_badge" class="status-badge" data-i18n="testStatusReady">Ready</span>
         </div>
-        <div class="card-desc" data-i18n="audioPreviewDesc">설정된 Unit 시간(ms)에 맞춘 실제 모스 부호 사운드('MORSE') 템포를 지금 미리 들어보세요.</div>
+        <div class="card-desc" data-i18n="audioPreviewDesc">설정된 Unit 시간(ms)에 맞춘 실제 모스 부호 사운드('MORSE') 템포를 지금 미리 들어보세요. 재생 속도는 ‘입력 속도 및 단위 시간 (Timing)’ 그룹의 설정에 영향을 받습니다.</div>
 
         <button type="button" id="btn_test_audio" class="test-btn">
           <span>🔊</span>
@@ -899,20 +768,32 @@
       </div>
     </div>
 
-    <!-- Section 4: Practice Documents -->
-    <div class="section-title">
-      <span>📜</span>
-      <span data-i18n="documentsSectionTitle">연습 문서 기록 (Archive)</span>
+  <!-- Saved sentences are supplied by PKJS; this origin never owns phone history. -->
+  <div class="section-title"><span>💾</span><span data-i18n="sentencesTitle">저장한 문장</span></div>
+  <div class="card">
+    <div id="sentences_list"></div>
+    <div style="display:flex; gap:8px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+      <button type="button" id="sentences-prev" class="sub-btn">◀</button>
+      <span id="sentences-page"></span>
+      <button type="button" id="sentences-next" class="sub-btn">▶</button>
+      <button type="button" id="sentences-delete" class="sub-btn" data-i18n="deleteSelected" disabled>선택한 문장 삭제</button>
     </div>
+    <div id="sentence-menu" role="menu" hidden style="position:fixed; z-index:1000; padding:8px; background:#1e293b; border:1px solid var(--border-color); border-radius:8px; box-shadow:0 8px 24px #0008;">
+      <button type="button" id="sentence-edit" class="sub-btn" role="menuitem" data-i18n="editSentence">수정</button>
+      <button type="button" id="sentence-delete" class="sub-btn" role="menuitem" data-i18n="deleteSentence">삭제</button>
+      <button type="button" id="sentence-send" class="sub-btn" role="menuitem" data-i18n="sendSentence">시계로 전송</button>
+    </div>
+    <div data-i18n="sentenceTransferHelp" style="font-size:12px; margin:10px 0 16px; white-space:pre-line;">Checkbox는 삭제 전용입니다.
+문장의 수정·삭제·시계로 전송은 해당 문장을 클릭하여 메뉴에서 선택하세요</div>
+    <hr style="width:90%; margin:20px auto; border:0; border-top:1px solid var(--border-color);">
+    <label for="sentence-input" data-i18n="sentenceInputLabel">직접 입력</label>
+    <textarea id="sentence-input" rows="3" maxlength="254" style="display:block; box-sizing:border-box; width:100%; margin:8px 0; padding:10px; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color); border-radius:8px;"></textarea>
+    <div id="sentence-input-count" style="font-size:12px;" aria-live="polite">0 / 254 bytes</div>
+    <div data-i18n="sentenceInputHelp" style="font-size:12px; margin:8px 0;">최대 UTF-8 254바이트. 한글·영문 등 BMP 문자만 지원합니다. 입력한 문장은 시계로만 전송하며 저장 이력에 추가하지 않습니다.</div>
+    <button type="button" id="sentence-input-send" class="sub-btn" data-i18n="sendSentence" disabled>시계로 전송</button>
 
-    <div class="card">
-      <div id="documents_list">
-        <div class="empty-docs">
-          <div class="empty-docs-icon">📂</div>
-          <div data-i18n="noDocuments">동기화된 연습 문서가 없습니다.</div>
-        </div>
-      </div>
-    </div>
+  </div>
+
   </div>
 
   <!-- Bottom Action Bar -->
@@ -931,7 +812,7 @@
       ko: {
         badgeTitle: "Emery Edition",
         title: "Signals",
-        subtitle: "터치와 소리로 익히는 한글·영문 모르스 부호",
+        subtitle: "터치,소리,게임으로 익히는 한글·영문 모르스 부호",
         inputSectionTitle: "입력 제스처 및 키 매핑",
         speedSectionTitle: "입력 속도 및 단위 시간 (Timing)",
         speedLevelLabel: "입력 속도 프리셋",
@@ -949,19 +830,17 @@
         visualFeedbackLabel: "시각 피드백 (Visual Feedback)",
         visualFeedbackDesc: "신호 입력 시 화면에 펄스 및 모스 부호 경로를 시각적으로 표시합니다.",
         audioPreviewTitle: "모스 리듬 미리듣기 (Web Audio)",
-        audioPreviewDesc: "설정된 Unit 시간(ms)에 맞춘 실제 모스 부호 사운드('MORSE') 템포를 지금 미리 들어보세요.",
+        audioPreviewDesc: "설정된 Unit 시간(ms)에 맞춘 실제 모스 부호 사운드('MORSE') 템포를 지금 미리 들어보세요. 재생 속도는 ‘입력 속도 및 단위 시간 (Timing)’ 그룹의 설정에 영향을 받습니다.",
         testStatusReady: "대기",
         testStatusPlaying: "재생 중...",
         btnTestAudio: "사운드 템포 체험",
         btnStopAudio: "사운드 정지",
-        documentsSectionTitle: "연습 문서 기록 (Archive)",
-        noDocuments: "동기화된 연습 문서가 없습니다.",
-        docComplete: "완료됨",
-        docPending: "복구 대기",
-        docChars: "자",
-        docId: "문서 ID",
-        copyBtn: "전문 복사",
-        copiedToast: "복사 완료!",
+        editSentence: "수정", deleteSentence: "삭제", deleteSelected: "선택한 문장 삭제",
+        sentenceEditInvalid: "수정한 문장은 지원하는 문자로 UTF-8 1~254바이트여야 합니다.",
+        sentenceInputLabel: "직접 입력",
+        sentenceInputHelp: "최대 UTF-8 254바이트. 한글·영문 등 BMP 문자만 지원합니다. 입력한 문장은 시계로만 전송하며 저장 이력에 추가하지 않습니다.",
+        sentenceInputInvalid: "지원하지 않는 문자",
+        sentencesTitle: "저장한 문장", sendSentence: "시계로 전송", noSentences: "저장한 문장이 없습니다.", sentenceTransferHelp: "Checkbox는 삭제 전용입니다.\n문장의 수정·삭제·시계로 전송은 해당 문장을 클릭하여 메뉴에서 선택하세요",
         cancelBtn: "취소",
         saveBtn: "설정 저장",
         cancelSourceLabel: "현재 글자 취소",
@@ -978,7 +857,7 @@
       en: {
         badgeTitle: "Emery Edition",
         title: "Signals",
-        subtitle: "Learn Korean & English Morse Code with Touch and Sound",
+        subtitle: "Learn Korean & English Morse Code with Touch, Sound and Games",
         inputSectionTitle: "Gesture & Key Mapping",
         speedSectionTitle: "Input Speed & Timing Units",
         speedLevelLabel: "Speed Level Preset",
@@ -996,19 +875,17 @@
         visualFeedbackLabel: "Visual Feedback",
         visualFeedbackDesc: "Show visual pulse and morse path animation on screen during input.",
         audioPreviewTitle: "Morse Rhythm Preview (Web Audio)",
-        audioPreviewDesc: "Listen to the current unit duration rhythm ('MORSE') on your device.",
+        audioPreviewDesc: "Listen to the current unit duration rhythm ('MORSE') on your device. Playback speed is affected by the settings in the ‘Input Speed & Timing Units’ group.",
         testStatusReady: "Ready",
         testStatusPlaying: "Playing...",
         btnTestAudio: "Play Rhythm Preview",
         btnStopAudio: "Stop Audio",
-        documentsSectionTitle: "Practice Documents Archive",
-        noDocuments: "No synchronized practice documents found.",
-        docComplete: "Complete",
-        docPending: "Pending",
-        docChars: "chars",
-        docId: "Doc ID",
-        copyBtn: "Copy Text",
-        copiedToast: "Copied!",
+        editSentence: "Edit", deleteSentence: "Delete", deleteSelected: "Delete selected sentences",
+        sentenceEditInvalid: "Use supported characters within 1–254 UTF-8 bytes.",
+        sentenceInputLabel: "Enter a sentence",
+        sentenceInputHelp: "Up to 254 UTF-8 bytes. BMP characters, including Korean and English, are supported. Sends only to the watch; does not add to saved history.",
+        sentenceInputInvalid: "Unsupported character",
+        sentencesTitle: "Saved Sentences", sendSentence: "Send to Watch", noSentences: "No saved sentences.", sentenceTransferHelp: "Checkboxes are for deletion only.\nTo edit, delete or send a sentence to the watch, click that sentence and choose from the menu.",
         cancelBtn: "Cancel",
         saveBtn: "Save Settings",
         cancelSourceLabel: "Cancel Current Character",
@@ -1053,7 +930,7 @@
 
     var payload = {
       options: Object.assign({}, DEFAULT_OPTIONS),
-      documents: []
+      sentences: []
     };
 
     var currentOptions = Object.assign({}, DEFAULT_OPTIONS);
@@ -1084,10 +961,12 @@
           if (parsed && typeof parsed === 'object') {
             if (parsed.options) {
               payload.options = parsed.options;
-              payload.documents = Array.isArray(parsed.documents) ? parsed.documents : [];
+              payload.sentences = Array.isArray(parsed.sentences) ? parsed.sentences : [];
+              payload.typedSentence = typeof parsed.typedSentence === 'string' ? parsed.typedSentence : '';
+              payload.sentencePage = Number(parsed.sentencePage) || 0;
+              payload.sentencePages = Number(parsed.sentencePages) || 1;
             } else {
               payload.options = parsed;
-              payload.documents = [];
             }
           }
         }
@@ -1252,7 +1131,7 @@ function duplicateInputKeys(sources) {
 
       populateAllSelects();
       validate();
-      renderDocuments();
+      renderSentences();
     }
 
     function detectLanguage() {
@@ -1345,115 +1224,113 @@ function duplicateInputKeys(sources) {
     }
 
     // ==========================================
-    // Practice Documents Rendering
-    // ==========================================
-    function renderDocuments() {
-      var container = document.getElementById('documents_list');
-      var dict = i18nData[currentLang] || i18nData['en'];
-      var docs = payload.documents || [];
-
-      if (!docs.length) {
-        container.innerHTML =
-          '<div class="empty-docs">' +
-            '<div class="empty-docs-icon">📂</div>' +
-            '<div>' + dict.noDocuments + '</div>' +
-          '</div>';
-        return;
-      }
-
-      container.innerHTML = '';
-      docs.slice().reverse().forEach(function(record, index) {
-        var itemEl = document.createElement('div');
-        itemEl.className = 'doc-item';
-
-        var formattedDate = record.startedAt ? new Date(record.startedAt).toLocaleString() : ('Document #' + record.documentId);
-        var isComplete = !!record.complete;
-        var badgeClass = isComplete ? 'complete' : 'pending';
-        var badgeText = isComplete ? dict.docComplete : dict.docPending;
-
-        var fullText = record.text || '';
-        if (!fullText && record.chunks) {
-          fullText = Object.keys(record.chunks)
-            .sort(function(a, b) { return Number(a) - Number(b); })
-            .map(function(k) { return record.chunks[k]; })
-            .join('');
-        }
-
-        var charCount = (fullText || '').length;
-
-        var headerEl = document.createElement('div');
-        headerEl.className = 'doc-header';
-        headerEl.innerHTML =
-          '<div>' +
-            '<div class="doc-title-group">' +
-              '<span class="doc-icon">📄</span>' +
-              '<span class="doc-date">' + formattedDate + '</span>' +
-              '<span class="doc-badge ' + badgeClass + '">' + badgeText + '</span>' +
-            '</div>' +
-            '<div class="doc-meta">' +
-              '<span>' + dict.docId + ': ' + record.documentId + '</span>' +
-              '<span>•</span>' +
-              '<span>' + charCount + ' ' + dict.docChars + '</span>' +
-            '</div>' +
-          '</div>' +
-          '<span style="color: var(--text-dim); font-size: 13px; margin-left: 8px;">▼</span>';
-
-        var contentEl = document.createElement('div');
-        contentEl.className = 'doc-content';
-
-        var preEl = document.createElement('pre');
-        preEl.className = 'doc-pre';
-        preEl.textContent = fullText || '(No content)';
-
-        var actionsEl = document.createElement('div');
-        actionsEl.className = 'doc-actions';
-
-        var copyBtn = document.createElement('button');
-        copyBtn.type = 'button';
-        copyBtn.className = 'copy-btn';
-        copyBtn.textContent = dict.copyBtn;
-
-        copyBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(fullText).then(function() {
-              copyBtn.textContent = dict.copiedToast;
-              setTimeout(function() { copyBtn.textContent = dict.copyBtn; }, 1800);
-            });
-          } else {
-            var tempInput = document.createElement('textarea');
-            tempInput.value = fullText;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            copyBtn.textContent = dict.copiedToast;
-            setTimeout(function() { copyBtn.textContent = dict.copyBtn; }, 1800);
-          }
-        });
-
-        actionsEl.appendChild(copyBtn);
-        contentEl.appendChild(preEl);
-        contentEl.appendChild(actionsEl);
-
-        headerEl.addEventListener('click', function() {
-          var isOpen = contentEl.classList.toggle('open');
-          var arrow = headerEl.querySelector('span:last-child');
-          if (arrow) arrow.textContent = isOpen ? '▲' : '▼';
-        });
-
-        itemEl.appendChild(headerEl);
-        itemEl.appendChild(contentEl);
-        container.appendChild(itemEl);
-      });
-    }
-
-    // ==========================================
     // Web Audio API Rhythm Preview Engine
     // ==========================================
     var audioCtx = null;
     var isAudioPlaying = false;
     var activeAudioTimers = [];
+
+    var selectedSentenceIds = [];
+    var contextSentence = null;
+    var sentenceEditor = null;
+    function closeSentenceMenu() {
+      document.getElementById('sentence-menu').hidden = true;
+      contextSentence = null;
+    }
+    function changeSentenceHistory(result) {
+      result.options = currentOptions;
+      result.page = payload.sentencePage || 0;
+      result.typedSentence = document.getElementById('sentence-input').value;
+      closeWithAction(result);
+    }
+    function editSentence(record, text) {
+      closeSentenceMenu();
+      var input = document.createElement('input');
+      input.type = 'text'; input.value = record.text; input.maxLength = 254;
+      input.style.cssText = 'width:100%; box-sizing:border-box; padding:8px; color:var(--text-main); background:var(--bg-card); border:1px solid var(--border-color);';
+      text.innerHTML = ''; text.appendChild(input);
+      function finish() {
+        if (!sentenceEditor || sentenceEditor.input !== input) return;
+        sentenceEditor = null;
+        var value = input.value, bytes = typedSentenceBytes(value);
+        text.innerHTML = '';
+        text.textContent = record.text;
+        if (value === record.text) return;
+        if (bytes <= 0 || bytes > 254) {
+          alert(i18nData[currentLang].sentenceEditInvalid);
+          return;
+        }
+        text.textContent = value;
+        changeSentenceHistory({action:'edit_sentence', id:record.id, text:value});
+      }
+      sentenceEditor = {input:input, finish:finish};
+      input.addEventListener('blur', finish);
+      input.focus();
+    }
+    function closeWithAction(result) {
+      var returnTo = getQueryParam('return_to', 'pebblejs://close#');
+      document.location = returnTo + (returnTo.indexOf('#') === -1 ? '#' : '') + encodeURIComponent(JSON.stringify(result));
+    }
+    function typedSentenceBytes(text) {
+      if (/[\u0000\uD800-\uDFFF]/.test(text)) return -1;
+      return unescape(encodeURIComponent(text)).length;
+    }
+    function updateSentenceInput() {
+      var text = document.getElementById('sentence-input').value;
+      var bytes = typedSentenceBytes(text);
+      var valid = bytes > 0 && bytes <= 254;
+      var counter = document.getElementById('sentence-input-count');
+      counter.textContent = bytes < 0 ? i18nData[currentLang].sentenceInputInvalid : bytes + ' / 254 bytes';
+      counter.style.color = valid || bytes === 0 ? '' : 'var(--danger, #e53935)';
+      document.getElementById('sentence-input-send').disabled = !valid;
+    }
+    function renderSentences() {
+      updateSentenceInput();
+      closeSentenceMenu();
+      var list = document.getElementById('sentences_list');
+      list.innerHTML = '';
+      selectedSentenceIds = [];
+      document.getElementById('sentences-delete').disabled = true;
+      var records = payload.sentences || [];
+      var dict = i18nData[currentLang] || i18nData.en;
+      if (!records.length) list.textContent = dict.noSentences;
+      records.forEach(function(record) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex; align-items:flex-start; gap:10px; padding:12px 0; border-bottom:1px solid var(--border-color);';
+        var checkbox = document.createElement('input'); checkbox.type = 'checkbox';
+        checkbox.setAttribute('aria-label', dict.deleteSentence + ': ' + record.text);
+        checkbox.addEventListener('change', function() {
+          selectedSentenceIds = selectedSentenceIds.filter(function(id) { return id !== record.id; });
+          if (checkbox.checked) selectedSentenceIds.push(record.id);
+          document.getElementById('sentences-delete').disabled = !selectedSentenceIds.length;
+        });
+        var content = document.createElement('div'); content.style.cssText = 'flex:1; min-width:0;';
+        var text = document.createElement('div'); text.textContent = record.text;
+        text.style.cssText = 'white-space:pre-wrap; overflow-wrap:anywhere; cursor:pointer;';
+        text.tabIndex = 0; text.setAttribute('role', 'button');
+        function openMenu() {
+          if (sentenceEditor) return;
+          contextSentence = {record:record, text:text};
+          var menu = document.getElementById('sentence-menu');
+          var bounds = text.getBoundingClientRect();
+          menu.style.left = '12px';
+          menu.style.top = Math.max(8, Math.min(bounds.bottom, window.innerHeight - 64)) + 'px';
+          menu.hidden = false;
+        }
+        text.addEventListener('click', function(event) { event.stopPropagation(); openMenu(); });
+        text.addEventListener('keydown', function(event) {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openMenu(); }
+        });
+        var date = document.createElement('small'); date.textContent = new Date(record.savedAt).toLocaleString();
+        date.style.cssText = 'display:block; color:var(--text-dim); margin-top:4px;';
+        content.appendChild(text); content.appendChild(date);
+        row.appendChild(checkbox); row.appendChild(content); list.appendChild(row);
+      });
+      var page = payload.sentencePage || 0, pages = payload.sentencePages || 1;
+      document.getElementById('sentences-page').textContent = records.length ? (page + 1) + ' / ' + pages : '0 / 0';
+      document.getElementById('sentences-prev').disabled = page === 0;
+      document.getElementById('sentences-next').disabled = page + 1 >= pages;
+    }
 
     function getAudioContext() {
       if (!audioCtx) {
@@ -1660,6 +1537,38 @@ function duplicateInputKeys(sources) {
         document.location = returnTo;
       });
 
+      document.getElementById('sentence-input').addEventListener('input', updateSentenceInput);
+      document.getElementById('sentence-input-send').addEventListener('click', function() {
+        var text = document.getElementById('sentence-input').value;
+        var bytes = typedSentenceBytes(text);
+        if (bytes > 0 && bytes <= 254) closeWithAction({action:'send_typed_sentence', text:text});
+      });
+      document.getElementById('sentence-send').addEventListener('click', function() {
+        if (contextSentence) closeWithAction({action:'send_sentence', id:contextSentence.record.id});
+      });
+      document.getElementById('sentence-edit').addEventListener('click', function() {
+        if (contextSentence) editSentence(contextSentence.record, contextSentence.text);
+      });
+      document.getElementById('sentence-delete').addEventListener('click', function() {
+        if (contextSentence) changeSentenceHistory({action:'delete_sentences', ids:[contextSentence.record.id]});
+      });
+      document.getElementById('sentences-delete').addEventListener('click', function() {
+        if (selectedSentenceIds.length) changeSentenceHistory({action:'delete_sentences', ids:selectedSentenceIds});
+      });
+      document.addEventListener('mousedown', function(event) {
+        if (sentenceEditor && event.target !== sentenceEditor.input) sentenceEditor.finish();
+      });
+      document.addEventListener('click', function(event) {
+        if (!document.getElementById('sentence-menu').contains(event.target)) closeSentenceMenu();
+      });
+      ['sentences-prev','sentences-next'].forEach(function(id, index) {
+        document.getElementById(id).addEventListener('click', function() {
+          closeWithAction({action:'sentence_page', page:(payload.sentencePage || 0) + (index ? 1 : -1), options:currentOptions, typedSentence:document.getElementById('sentence-input').value});
+        });
+      });
+      document.getElementById('sentence-input').value = payload.typedSentence || '';
+      renderSentences();
+
       // Save Button
       document.getElementById('btn-save').addEventListener('click', function() {
         if (!validate()) return;
@@ -1708,7 +1617,7 @@ function duplicateInputKeys(sources) {
 
       detectLanguage();
       setupEventListeners();
-      renderDocuments();
+      renderSentences();
     }
 
     window.addEventListener('DOMContentLoaded', init);
