@@ -872,6 +872,14 @@
         </label>
       </div>
 
+      <div class="divider"></div>
+      <label class="card-label" for="light-on-seconds" data-i18n="lightOnLabel">터치 후 Light 유지 시간</label>
+      <select id="light-on-seconds" class="select-input">
+        <option value="0">0s</option><option value="1">1s</option><option value="2">2s</option>
+        <option value="3">3s</option><option value="4">4s</option><option value="5">5s</option>
+      </select>
+      <div class="card-desc" data-i18n="lightOnDesc">마지막 터치 시작부터 지정한 시간 동안 Light를 켭니다. 0초는 즉시 끕니다. 기본값은 1초입니다.</div>
+
       <div class="test-panel">
         <div class="test-header">
           <div class="test-title" data-i18n="audioPreviewTitle">모스 리듬 미리듣기 (Web Audio)</div>
@@ -936,6 +944,8 @@
         use7UnitsLabel: "7-Units 자동 띄어쓰기",
         use7UnitsDesc: "마지막 입력 후 점 길이의 7배(7-Units) 동안 쉴 때 띄어쓰기를 삽입합니다. 끄면 수동 띄어쓰기를 사용합니다.",
         feedbackSectionTitle: "피드백 & 리듬 시뮬레이터",
+        lightOnLabel: "터치 후 Light 유지 시간",
+        lightOnDesc: "마지막 터치 시작부터 지정한 시간 동안 Light를 켭니다. 0초는 즉시 끕니다. 기본값은 1초입니다.",
         visualFeedbackLabel: "시각 피드백 (Visual Feedback)",
         visualFeedbackDesc: "신호 입력 시 화면에 펄스 및 모스 부호 경로를 시각적으로 표시합니다.",
         audioPreviewTitle: "모스 리듬 미리듣기 (Web Audio)",
@@ -981,6 +991,8 @@
         use7UnitsLabel: "7-Units Auto Word Gap",
         use7UnitsDesc: "Automatically inserts a space when paused for 7x dot unit. Disable to space manually.",
         feedbackSectionTitle: "Feedback & Rhythm Simulator",
+        lightOnLabel: "Seconds to keep Light On",
+        lightOnDesc: "Keep the Light on from the latest touch start. 0 seconds turns it off immediately. Default: 1 second.",
         visualFeedbackLabel: "Visual Feedback",
         visualFeedbackDesc: "Show visual pulse and morse path animation on screen during input.",
         audioPreviewTitle: "Morse Rhythm Preview (Web Audio)",
@@ -1026,7 +1038,8 @@
     var LEVEL_UNITS = [400, 320, 250, 200, 160, 120];
 
     var DEFAULT_OPTIONS = {
-      version: 6,
+      version: 7,
+      light_on_seconds: 1,
       clear_input_source: 16,
       cancel_input_source: 15,
       use_3_units: 0,
@@ -1097,6 +1110,7 @@
       currentOptions.use_7_units = opt.use_7_units !== undefined ? (Number(opt.use_7_units) === 1 ? 1 : 0) : DEFAULT_OPTIONS.use_7_units;
       currentOptions.speedLevel = opt.speedLevel !== undefined ? Number(opt.speedLevel) : DEFAULT_OPTIONS.speedLevel;
       currentOptions.unitMs = opt.unitMs !== undefined ? Number(opt.unitMs) : DEFAULT_OPTIONS.unitMs;
+      currentOptions.light_on_seconds = opt.light_on_seconds !== undefined ? Number(opt.light_on_seconds) : DEFAULT_OPTIONS.light_on_seconds;
       currentOptions.visualFeedback = opt.visualFeedback !== undefined ? (opt.visualFeedback ? 1 : 0) : DEFAULT_OPTIONS.visualFeedback;
     }
 
@@ -1136,6 +1150,7 @@
 function validTraining(options) {
   return [0,1,2].indexOf(Number(options.training_mode)) >= 0 &&
     [0,1,2,3].indexOf(Number(options.touch_layout)) >= 0 &&
+    [0,1,2,3,4,5].indexOf(Number(options.light_on_seconds)) >= 0 &&
     [0,5,10,15,20,30].indexOf(Number(options.tolerance_percent)) >= 0 &&
     ['novice_policy','intermediate_policy','advanced_policy'].every(function(k) {
       var n = Number(options[k]); return isFinite(n) && Math.floor(n) === n && n >= 0 && n <= 15;
@@ -1304,7 +1319,7 @@ function duplicateInputKeys(sources) {
       var isUnitValid = isFinite(unitMs) && Math.floor(unitMs) === unitMs && unitMs >= 80 && unitMs <= 600;
 
       // Check Version & Payload
-      var isVersionValid = Number(currentOptions.version) === 6;
+      var isVersionValid = Number(currentOptions.version) === 7;
 
       var errorMsg = '';
       if (!isVersionValid) {
@@ -1594,6 +1609,10 @@ function duplicateInputKeys(sources) {
       var cancel = document.getElementById('cancel-source');
       var range = document.getElementById('unit-ms-range');
       var visual = document.getElementById('visual-feedback');
+      document.getElementById('light-on-seconds').addEventListener('change', function(e) {
+        currentOptions.light_on_seconds = Number(e.target.value);
+        validate();
+      });
 
       clear.addEventListener('change', function(e) {
         currentOptions.clear_input_source = Number(e.target.value);
@@ -1654,6 +1673,7 @@ function duplicateInputKeys(sources) {
             intermediate_policy: Number(currentOptions.intermediate_policy),
             advanced_policy: Number(currentOptions.advanced_policy),
             touch_layout: Number(currentOptions.touch_layout),
+            light_on_seconds: Number(currentOptions.light_on_seconds),
 
             clear_input_source: Number(currentOptions.clear_input_source),
             cancel_input_source: Number(currentOptions.cancel_input_source),
@@ -1680,6 +1700,7 @@ function duplicateInputKeys(sources) {
 
       // UI state initialization
       renderTraining();
+      document.getElementById('light-on-seconds').value = String(currentOptions.light_on_seconds);
       document.getElementById('visual-feedback').checked = currentOptions.visualFeedback !== 0;
 
       updateUnitDisplay(currentOptions.unitMs);
