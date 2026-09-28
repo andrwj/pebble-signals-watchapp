@@ -791,6 +791,8 @@
     <div id="sentence-input-count" style="font-size:12px;" aria-live="polite">0 / 254 bytes</div>
     <div data-i18n="sentenceInputHelp" style="font-size:12px; margin:8px 0;">최대 UTF-8 254바이트. 한글·영문 등 BMP 문자만 지원합니다. 입력한 문장은 시계로만 전송하며 저장 이력에 추가하지 않습니다.</div>
     <button type="button" id="sentence-input-send" class="sub-btn" data-i18n="sendSentence" disabled>시계로 전송</button>
+    <div data-i18n="sentenceReplayHelp" style="font-size:12px; margin-top:8px; white-space:pre-line;">전송된 문장은 REPLAY에 기억됩니다.
+다시 들으려면 double-select-click을 누르세요.</div>
 
   </div>
 
@@ -837,6 +839,7 @@
         btnStopAudio: "사운드 정지",
         editSentence: "수정", deleteSentence: "삭제", deleteSelected: "선택한 문장 삭제",
         sentenceEditInvalid: "수정한 문장은 지원하는 문자로 UTF-8 1~254바이트여야 합니다.",
+        sentenceReplayHelp: "전송된 문장은 REPLAY에 기억됩니다.\n다시 들으려면 double-select-click을 누르세요.",
         sentenceInputLabel: "직접 입력",
         sentenceInputHelp: "최대 UTF-8 254바이트. 한글·영문 등 BMP 문자만 지원합니다. 입력한 문장은 시계로만 전송하며 저장 이력에 추가하지 않습니다.",
         sentenceInputInvalid: "지원하지 않는 문자",
@@ -882,6 +885,7 @@
         btnStopAudio: "Stop Audio",
         editSentence: "Edit", deleteSentence: "Delete", deleteSelected: "Delete selected sentences",
         sentenceEditInvalid: "Use supported characters within 1–254 UTF-8 bytes.",
+        sentenceReplayHelp: "Sent sentences are stored in REPLAY memory.\nTo listen again, press double-select-click.",
         sentenceInputLabel: "Enter a sentence",
         sentenceInputHelp: "Up to 254 UTF-8 bytes. BMP characters, including Korean and English, are supported. Sends only to the watch; does not add to saved history.",
         sentenceInputInvalid: "Unsupported character",
