@@ -580,6 +580,51 @@
     }
     .mode-policy-table select { min-width: 90px; padding: 8px 22px 8px 8px; font-size: 12px; }
     .mode-policy-table th { font-size: 12px; }
+
+    /* Game records: self-contained, no chart CDN or remote font dependency. */
+    .game-hub { --game-mint:#63f5c5; border:1px solid #294052; border-radius:20px; overflow:hidden; margin:4px 0 28px; background:#101923; }
+    .game-hero { padding:24px; background:radial-gradient(ellipse at 100% 0%,#17473f 0%,transparent 65%),linear-gradient(125deg,#152330,#101923); }
+    .game-eyebrow { color:var(--game-mint); font-size:11px; letter-spacing:2px; font-weight:800; display:flex; justify-content:space-between; gap:8px; }
+    .game-eyebrow span:last-child { letter-spacing:0; color:#b7c7d7; font-weight:500; }
+    .game-hero h2 { font-size:27px; letter-spacing:-1px; margin:18px 0 6px; }
+    .game-hero p { font-size:12px; line-height:1.7; color:#a6bbcd; }
+    .game-scoreline { display:flex; align-items:baseline; gap:8px; margin-top:19px; }
+    .game-scoreline strong { font-size:58px; line-height:1; letter-spacing:-3px; color:var(--game-mint); font-variant-numeric:tabular-nums; }
+    .game-scoreline span { font-size:12px; letter-spacing:1px; color:#afc6cf; }
+    .game-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-top:1px solid #294052; border-bottom:1px solid #294052; }
+    .game-metric { padding:17px 12px; border-right:1px solid #294052; }
+    .game-metric:last-child { border:0; }
+    .game-metric span { display:block; color:#a6bbcd; font-size:10px; margin-bottom:6px; }
+    .game-metric strong { font-size:21px; font-variant-numeric:tabular-nums; }
+    .game-panel { padding:20px; }
+    .game-panel + .game-panel { border-top:1px solid #294052; }
+    .game-panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
+    .game-panel-head h3 { font-size:13px; letter-spacing:.3px; }
+    .game-panel-head small { font-size:10px; color:#8da4b9; }
+    .game-chart { width:100%; display:block; height:auto; }
+    .game-legend { display:flex; flex-wrap:wrap; gap:14px; font-size:10px; color:#a6bbcd; margin-top:10px; }
+    .game-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:5px; }
+    .game-empty { border:1px dashed #385166; border-radius:12px; padding:26px 18px; text-align:center; color:#afc6cf; font-size:13px; line-height:1.9; }
+    .game-empty b { display:block; color:#e4f3fa; font-size:17px; margin-bottom:6px; }
+    .game-log { border-top:1px solid #263544; padding:14px 0; }
+    .game-log:first-child { border-top:0; }
+    .game-log summary { display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none; }
+    .game-log summary::-webkit-details-marker { display:none; }
+    .game-result { font-size:9px; font-weight:800; padding:5px 7px; border-radius:5px; min-width:62px; text-align:center; letter-spacing:.6px; }
+    .game-result.win { color:#63f5c5; background:#163a31; }
+    .game-result.loss { color:#ffaf93; background:#3b2826; }
+    .game-result.quit { color:#b5c6db; background:#253345; }
+    .game-date { flex:1; font-size:11px; color:#a6bbcd; }
+    .game-log strong { font-size:19px; font-variant-numeric:tabular-nums; }
+    .game-log strong small { font-size:9px; color:#a6bbcd; margin-left:4px; font-weight:400; }
+    .game-log dl { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; padding:14px; background:#0b141e; border-radius:8px; }
+    .game-log dt { font-size:10px; color:#8da4b9; margin-bottom:4px; }
+    .game-log dd { font-size:13px; }
+    .game-options { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .game-options label { color:#a6bbcd; font-size:11px; display:block; }
+    .game-options select { display:block; width:100%; margin-top:7px; min-width:0; font-size:12px; padding:10px; background:#0c1621; color:#f8fafc; border:1px solid #385166; border-radius:8px; }
+    .game-note { color:#8da4b9; font-size:11px; line-height:1.7; margin-top:14px; }
+    @media (max-width:360px) { .game-hero,.game-panel { padding:16px; } .game-metric { padding:14px 8px; } .game-scoreline strong { font-size:48px; } }
   </style>
 </head>
 <body>
@@ -601,6 +646,37 @@
 
     <!-- Error Alert Banner -->
     <div id="validation_alert" class="alert-banner error" role="alert"></div>
+
+    <section class="game-hub" aria-label="Game records">
+      <div class="game-hero">
+        <div class="game-eyebrow">SIGNALS / GAME <span id="game-session-count"></span></div>
+        <h2 data-i18n="gameTitle">나의 게임 기록</h2>
+        <p data-i18n="gameSubtitle">밀려오는 문장을 지우고, 나의 입력 기록을 넘어서세요.</p>
+        <div class="game-scoreline"><strong id="game-best">—</strong><span>BEST CPM</span></div>
+      </div>
+      <div class="game-metrics">
+        <div class="game-metric"><span data-i18n="gameAverage">평균 CPM</span><strong id="game-average">—</strong></div>
+        <div class="game-metric"><span data-i18n="gameCleared">삭제 성공</span><strong id="game-hits">0</strong></div>
+        <div class="game-metric"><span data-i18n="gameWins">전체 승리</span><strong id="game-wins">0</strong></div>
+      </div>
+      <div class="game-panel">
+        <div class="game-panel-head"><h3 data-i18n="gameTrend">입력 속도 추이</h3><small data-i18n="gameRecent">최근 30게임 · CPM</small></div>
+        <div id="game-chart-wrap"></div>
+        <div class="game-legend"><span><i class="game-dot" style="background:#63f5c5"></i><span data-i18n="gameWin">승리</span></span><span><i class="game-dot" style="background:#ffaf93"></i><span data-i18n="gameLoss">게임 오버</span></span><span><i class="game-dot" style="background:#94abc4"></i><span data-i18n="gameQuit">사용자 종료</span></span></div>
+        <p class="game-note" data-i18n="gameFormula">CPM은 실제 플레이 1분당 삭제에 성공한 글자 수입니다. 시작 대기·메뉴·포커스 상실 시간은 제외합니다.</p>
+      </div>
+      <div class="game-panel"><div class="game-panel-head"><h3 data-i18n="gameHistory">매치 히스토리</h3><small data-i18n="gameDetails">기록을 눌러 상세 보기</small></div><div id="game-history"></div></div>
+      <div class="game-panel">
+        <div class="game-panel-head"><h3 data-i18n="gameSettings">게임 설정</h3><small>GAME RULES</small></div>
+        <div class="game-options">
+          <label><span data-i18n="gameInterval">이동간격</span><select id="game_interval_ms"></select></label>
+          <label><span data-i18n="gameMinimum">최소 이동간격</span><select id="game_minimum_ms"></select></label>
+          <label><span data-i18n="gameReset">다음 문장 속도</span><select id="game_reset_speed"></select></label>
+          <label><span data-i18n="gameCount">기억할 문장 수</span><select id="game_sentence_count"></select></label>
+        </div>
+        <p class="game-note" data-i18n="gameControls">DOWN 길게: 게임 토글 · BACK: 연습 복귀 · DOWN: 한영 전환 · DOWN 두 번: 소리 토글. 문장은 시계의 MENU → Game → 문장 가져오기에서 순환하여 가져옵니다.</p>
+      </div>
+    </section>
 
     <!-- Section 1: Input Mapping -->
     <div class="section-title">
@@ -905,6 +981,20 @@
       }
     };
 
+    Object.assign(i18nData.ko, {
+      gameTitle:'나의 게임 기록', gameSubtitle:'밀려오는 문장을 지우고, 나의 입력 기록을 넘어서세요.',
+      gameAverage:'평균 CPM', gameCleared:'삭제 성공', gameWins:'전체 승리', gameTrend:'입력 속도 추이', gameRecent:'최근 30게임 · CPM',
+      gameWin:'승리', gameLoss:'게임 오버', gameQuit:'사용자 종료', gameFormula:'CPM은 실제 플레이 1분당 삭제에 성공한 글자 수입니다. 시작 대기·메뉴·포커스 상실 시간은 제외합니다.',
+      gameHistory:'매치 히스토리', gameDetails:'기록을 눌러 상세 보기', gameSettings:'게임 설정', gameInterval:'이동간격', gameMinimum:'최소 이동간격', gameReset:'다음 문장 속도', gameCount:'기억할 문장 수',
+      gameControls:'DOWN 길게: 게임 토글 · BACK: 연습 복귀 · DOWN: 한영 전환 · DOWN 두 번: 소리 토글. 문장은 시계의 MENU → Game → 문장 가져오기에서 순환하여 가져옵니다.'
+    });
+    Object.assign(i18nData.en, {
+      gameTitle:'Your game record', gameSubtitle:'Clear the incoming words. Build your personal best.',
+      gameAverage:'AVERAGE CPM', gameCleared:'CHARACTERS CLEARED', gameWins:'VICTORIES', gameTrend:'SPEED OVER TIME', gameRecent:'Last 30 games · CPM',
+      gameWin:'Victory', gameLoss:'Game over', gameQuit:'Quit', gameFormula:'CPM counts successfully cleared characters per minute of active play. Waiting, menus and time out of focus are excluded.',
+      gameHistory:'MATCH HISTORY', gameDetails:'Tap a match for details', gameSettings:'GAME SETTINGS', gameInterval:'Starting interval', gameMinimum:'Minimum interval', gameReset:'Next sentence speed', gameCount:'Sentences to remember',
+      gameControls:'Hold DOWN: toggle game · BACK: return to practice · DOWN: language · double DOWN: sound. Fetch the next saved page from MENU → Game → Get sentences on your watch.'
+    });
     var currentLang = 'ko';
 
     var SOURCES_DEF = [
@@ -964,6 +1054,9 @@
           var parsed = JSON.parse(decodeURIComponent(hash));
           if (parsed && typeof parsed === 'object') {
             if (parsed.options) {
+              payload.games = Array.isArray(parsed.games) ? parsed.games : [];
+              payload.gameCount = Number(parsed.gameCount) || 0;
+              payload.gameSummary = parsed.gameSummary || null;
               payload.options = parsed.options;
               payload.sentences = Array.isArray(parsed.sentences) ? parsed.sentences : [];
               payload.typedSentence = typeof parsed.typedSentence === 'string' ? parsed.typedSentence : '';
@@ -1140,6 +1233,7 @@ function duplicateInputKeys(sources) {
       populateAllSelects();
       validate();
       renderSentences();
+      renderGames();
     }
 
     function detectLanguage() {
@@ -1620,6 +1714,87 @@ function duplicateInputKeys(sources) {
     // ==========================================
     // Initialization
     // ==========================================
+    function gameNumber(n) { return Number(n || 0).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {maximumFractionDigits:1}); }
+    function renderGames() {
+      var ko = currentLang === 'ko', games = (payload.games || []).filter(function(g) {
+        return g && isFinite(g.cpm) && g.cpm >= 0 && isFinite(g.durationMs) && g.durationMs >= 0;
+      });
+      var summary = payload.gameSummary || games.reduce(function(a,g) {
+        a.hits += g.hits; a.durationMs += g.durationMs; a.wins += g.outcome === 1 ? 1 : 0; a.bestCpm = Math.max(a.bestCpm,g.cpm); return a;
+      }, {hits:0,durationMs:0,wins:0,bestCpm:0});
+      document.getElementById('game-session-count').textContent = gameNumber(payload.gameCount || games.length) + (ko ? ' 게임' : ' matches');
+      document.getElementById('game-best').textContent = games.length ? gameNumber(summary.bestCpm) : '—';
+      document.getElementById('game-average').textContent = summary.durationMs ? gameNumber(summary.hits*60000/summary.durationMs) : '—';
+      document.getElementById('game-hits').textContent = gameNumber(summary.hits);
+      document.getElementById('game-wins').textContent = gameNumber(summary.wins);
+      var chart = document.getElementById('game-chart-wrap'); chart.textContent = '';
+      var history = document.getElementById('game-history'); history.textContent = '';
+      function element(tag, text, cls) { var el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (cls) el.className = cls; return el; }
+      if (!games.length) {
+        var empty = element('div', undefined, 'game-empty');
+        empty.appendChild(element('b', ko ? '첫 기록을 기다리고 있어요' : 'Your first record starts here'));
+        empty.appendChild(element('p', ko ? '문장을 기억한 뒤 DOWN을 길게 눌러 시작하세요.' : 'Remember a sentence, then hold DOWN to start.'));
+        chart.appendChild(empty); history.appendChild(element('p', ko ? '완료한 게임이 여기에 기록됩니다.' : 'Completed games will appear here.', 'game-note'));
+      } else {
+        var ns = 'http://www.w3.org/2000/svg';
+        function svg(tag, attrs, text) { var n = document.createElementNS(ns, tag); Object.keys(attrs).forEach(function(k) { n.setAttribute(k, attrs[k]); }); if (text !== undefined) n.textContent = text; return n; }
+        var canvas = svg('svg', {viewBox:'0 0 420 190', 'class':'game-chart', role:'img', 'aria-label':ko ? '최근 게임의 분당 삭제 성공 글자 수' : 'Characters cleared per minute across recent games'});
+        var maximum = Math.max(10, Math.ceil(Math.max.apply(null,games.map(function(g) { return g.cpm; }))/10)*10);
+        for (var line=0; line<=4; line++) {
+          var y=16+line*35;
+          canvas.appendChild(svg('line',{x1:36,x2:408,y1:y,y2:y,stroke:'#293b4c','stroke-dasharray':'3 5'}));
+          canvas.appendChild(svg('text',{x:28,y:y+3,fill:'#8da4b9','font-size':9,'text-anchor':'end'},gameNumber(maximum*(4-line)/4)));
+        }
+        var points = games.map(function(g,i) { return {x:games.length === 1 ? 222 : 42+i*360/(games.length-1), y:156-g.cpm/maximum*140}; });
+        var path = points.map(function(p,i) { return (i ? 'L' : 'M')+p.x+','+p.y; }).join(' ');
+        canvas.appendChild(svg('path',{d:path+' L'+points[points.length-1].x+',156 L'+points[0].x+',156 Z',fill:'#63f5c5','fill-opacity':'.06'}));
+        canvas.appendChild(svg('path',{d:path,fill:'none',stroke:'#63f5c5','stroke-width':2,'stroke-linejoin':'round'}));
+        points.forEach(function(p,i) {
+          var color = games[i].outcome === 1 ? '#63f5c5' : games[i].outcome === 2 ? '#ffaf93' : '#94abc4';
+          var dot = svg('circle',{cx:p.x,cy:p.y,r:games.length < 15 ? 4 : 3,fill:color,stroke:'#101923','stroke-width':2});
+          dot.appendChild(svg('title',{},new Date(games[i].playedAt).toLocaleString()+' · '+gameNumber(games[i].cpm)+' CPM')); canvas.appendChild(dot);
+        });
+        canvas.appendChild(svg('text',{x:36,y:181,fill:'#8da4b9','font-size':9},ko ? '이전 게임' : 'EARLIER'));
+        canvas.appendChild(svg('text',{x:408,y:181,fill:'#8da4b9','font-size':9,'text-anchor':'end'},ko ? '최근 게임' : 'LATEST'));
+        chart.appendChild(canvas);
+        games.slice().reverse().forEach(function(g) {
+          var row = element('details',undefined,'game-log'), head = element('summary');
+          var outcome = g.outcome === 1 ? 'win' : g.outcome === 2 ? 'loss' : 'quit';
+          head.appendChild(element('span',ko ? {win:'승리',loss:'게임 오버',quit:'종료'}[outcome] : {win:'VICTORY',loss:'GAME OVER',quit:'QUIT'}[outcome],'game-result '+outcome));
+          head.appendChild(element('span',new Date(g.playedAt).toLocaleString(ko ? 'ko-KR' : 'en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),'game-date'));
+          var score = element('strong',gameNumber(g.cpm)); score.appendChild(element('small','CPM')); head.appendChild(score); row.appendChild(head);
+          var dl = element('dl');
+          [[ko?'삭제 성공':'Cleared',gameNumber(g.hits)], [ko?'통과 문장':'Sentences',g.rounds+' / '+g.totalRounds],
+           [ko?'실제 플레이':'Active time',gameNumber(g.durationMs/1000)+(ko?'초':' sec')],
+           [ko?'시작 / 최소 간격':'Start / minimum',gameNumber(g.startMs/1000)+'s / '+gameNumber(g.minimumMs/1000)+'s']].forEach(function(pair) {
+             var group=element('div'); group.appendChild(element('dt',pair[0])); group.appendChild(element('dd',pair[1])); dl.appendChild(group);
+           });
+          row.appendChild(dl); history.appendChild(row);
+        });
+      }
+      var defs = {
+        game_interval_ms:[1000,2000,3000,4000,5000,6000,7000,8000,9000,10000],
+        game_minimum_ms:[100,400,700,1000,1300,1600,1900,2000], game_reset_speed:[1,0], game_sentence_count:[1,2,3,4,5,6,7,8,9,10]
+      };
+      Object.keys(defs).forEach(function(key) {
+        var select=document.getElementById(key); select.textContent='';
+        defs[key].forEach(function(value) {
+          var label=key === 'game_reset_speed' ? (value ? (ko?'시작 속도로 리셋':'Reset speed') : (ko?'마지막 속도 유지':'Keep speed')) :
+            key === 'game_sentence_count' ? value+(ko?'개':' sentences') : value/1000+(ko?'초':' sec');
+          var option=element('option',label); option.value=value; select.appendChild(option);
+        });
+        select.value=String(currentOptions[key]);
+        select.onchange=function() {
+          currentOptions[key]=Number(select.value);
+          if (currentOptions.game_interval_ms < currentOptions.game_minimum_ms) {
+            currentOptions.game_interval_ms=Math.ceil(currentOptions.game_minimum_ms/1000)*1000;
+            document.getElementById('game_interval_ms').value=String(currentOptions.game_interval_ms);
+          }
+          validate();
+        };
+      });
+    }
+
     function init() {
       initPayload();
 
