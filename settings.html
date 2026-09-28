@@ -778,7 +778,7 @@
       <button type="button" id="sentences-next" class="sub-btn">▶</button>
       <button type="button" id="sentences-delete" class="sub-btn" data-i18n="deleteSelected" disabled>선택한 문장 삭제</button>
     </div>
-    <div id="sentence-menu" role="menu" hidden style="position:fixed; z-index:1000; padding:8px; background:#1e293b; border:1px solid var(--border-color); border-radius:8px; box-shadow:0 8px 24px #0008;">
+    <div id="sentence-menu" role="menu" hidden style="position:fixed; left:50%; transform:translateX(-50%); width:max-content; max-width:calc(100% - 24px); box-sizing:border-box; z-index:1000; padding:8px; background:#1e293b; border:1px solid var(--border-color); border-radius:8px; box-shadow:0 8px 24px #0008;">
       <button type="button" id="sentence-edit" class="sub-btn" role="menuitem" data-i18n="editSentence">수정</button>
       <button type="button" id="sentence-delete" class="sub-btn" role="menuitem" data-i18n="deleteSentence">삭제</button>
       <button type="button" id="sentence-send" class="sub-btn" role="menuitem" data-i18n="sendSentence">시계로 전송</button>
@@ -1298,6 +1298,7 @@ function duplicateInputKeys(sources) {
         var row = document.createElement('div');
         row.style.cssText = 'display:flex; align-items:flex-start; gap:10px; padding:12px 0; border-bottom:1px solid var(--border-color);';
         var checkbox = document.createElement('input'); checkbox.type = 'checkbox';
+        checkbox.style.cssText = 'width:16px; height:16px; margin:4px 0 0; flex-shrink:0;';
         checkbox.setAttribute('aria-label', dict.deleteSentence + ': ' + record.text);
         checkbox.addEventListener('change', function() {
           selectedSentenceIds = selectedSentenceIds.filter(function(id) { return id !== record.id; });
@@ -1306,19 +1307,20 @@ function duplicateInputKeys(sources) {
         });
         var content = document.createElement('div'); content.style.cssText = 'flex:1; min-width:0;';
         var text = document.createElement('div'); text.textContent = record.text;
-        text.style.cssText = 'white-space:pre-wrap; overflow-wrap:anywhere; cursor:pointer;';
+        text.style.cssText = 'line-height:24px; white-space:pre-wrap; overflow-wrap:anywhere; cursor:pointer;';
         text.tabIndex = 0; text.setAttribute('role', 'button');
         function openMenu() {
           if (sentenceEditor) return;
           contextSentence = {record:record, text:text};
           var menu = document.getElementById('sentence-menu');
           var bounds = text.getBoundingClientRect();
-          menu.style.left = '12px';
-          menu.style.top = Math.max(8, Math.min(bounds.bottom, window.innerHeight - 64)) + 'px';
+          menu.style.left = '50%';
+          menu.style.top = (bounds.bottom + 4) + 'px';
           menu.hidden = false;
         }
         text.addEventListener('click', function(event) { event.stopPropagation(); openMenu(); });
         text.addEventListener('keydown', function(event) {
+          if (event.target !== text) return;
           if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openMenu(); }
         });
         var date = document.createElement('small'); date.textContent = new Date(record.savedAt).toLocaleString();
@@ -1546,6 +1548,7 @@ function duplicateInputKeys(sources) {
       document.getElementById('sentence-send').addEventListener('click', function() {
         if (contextSentence) closeWithAction({action:'send_sentence', id:contextSentence.record.id});
       });
+      document.body.appendChild(document.getElementById('sentence-menu'));
       document.getElementById('sentence-edit').addEventListener('click', function() {
         if (contextSentence) editSentence(contextSentence.record, contextSentence.text);
       });
