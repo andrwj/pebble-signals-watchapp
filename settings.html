@@ -1543,10 +1543,10 @@ function duplicateInputKeys(sources) {
       document.getElementById('sentence-input-send').addEventListener('click', function() {
         var text = document.getElementById('sentence-input').value;
         var bytes = typedSentenceBytes(text);
-        if (bytes > 0 && bytes <= 254) closeWithAction({action:'send_typed_sentence', text:text});
+        if (bytes > 0 && bytes <= 254) changeSentenceHistory({action:'send_typed_sentence', text:text});
       });
       document.getElementById('sentence-send').addEventListener('click', function() {
-        if (contextSentence) closeWithAction({action:'send_sentence', id:contextSentence.record.id});
+        if (contextSentence) changeSentenceHistory({action:'send_sentence', id:contextSentence.record.id});
       });
       document.body.appendChild(document.getElementById('sentence-menu'));
       document.getElementById('sentence-edit').addEventListener('click', function() {
