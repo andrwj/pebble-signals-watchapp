@@ -919,7 +919,8 @@
     var LEVEL_UNITS = [400, 320, 250, 200, 160, 120];
 
     var DEFAULT_OPTIONS = {
-      version: 7,
+      version: 8,
+      game_interval_ms: 3000, game_minimum_ms: 1000, game_reset_speed: 1, game_sentence_count: 10,
       light_on_seconds: 1,
       clear_input_source: 16,
       cancel_input_source: 15,
@@ -986,6 +987,10 @@
       currentOptions.advanced_policy = opt.advanced_policy !== undefined ? Number(opt.advanced_policy) : DEFAULT_OPTIONS.advanced_policy;
       currentOptions.touch_layout = opt.touch_layout !== undefined ? Number(opt.touch_layout) : DEFAULT_OPTIONS.touch_layout;
 
+      currentOptions.game_interval_ms = opt.game_interval_ms !== undefined ? Number(opt.game_interval_ms) : DEFAULT_OPTIONS.game_interval_ms;
+      currentOptions.game_minimum_ms = opt.game_minimum_ms !== undefined ? Number(opt.game_minimum_ms) : DEFAULT_OPTIONS.game_minimum_ms;
+      currentOptions.game_reset_speed = opt.game_reset_speed !== undefined ? Number(opt.game_reset_speed) : DEFAULT_OPTIONS.game_reset_speed;
+      currentOptions.game_sentence_count = opt.game_sentence_count !== undefined ? Number(opt.game_sentence_count) : DEFAULT_OPTIONS.game_sentence_count;
       currentOptions.version = opt.version !== undefined ? Number(opt.version) : DEFAULT_OPTIONS.version;
       currentOptions.clear_input_source = opt.clear_input_source !== undefined ? Number(opt.clear_input_source) : DEFAULT_OPTIONS.clear_input_source;
       currentOptions.cancel_input_source = opt.cancel_input_source !== undefined ? Number(opt.cancel_input_source) : DEFAULT_OPTIONS.cancel_input_source;
@@ -1202,7 +1207,7 @@ function duplicateInputKeys(sources) {
       var isUnitValid = isFinite(unitMs) && Math.floor(unitMs) === unitMs && unitMs >= 80 && unitMs <= 600;
 
       // Check Version & Payload
-      var isVersionValid = Number(currentOptions.version) === 7;
+      var isVersionValid = Number(currentOptions.version) === 8;
 
       var errorMsg = '';
       if (!isVersionValid) {
@@ -1583,6 +1588,11 @@ function duplicateInputKeys(sources) {
         var result = {
           options: {
             version: Number(currentOptions.version),
+            game_interval_ms: Number(currentOptions.game_interval_ms),
+            game_minimum_ms: Number(currentOptions.game_minimum_ms),
+            game_reset_speed: Number(currentOptions.game_reset_speed),
+            game_sentence_count: Number(currentOptions.game_sentence_count),
+
             training_mode: Number(currentOptions.training_mode),
             tolerance_percent: Number(currentOptions.tolerance_percent),
             novice_policy: Number(currentOptions.novice_policy),
