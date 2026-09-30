@@ -1031,7 +1031,8 @@
     var LEVEL_WPM = [5, 10, 15, 20];
 
     var DEFAULT_OPTIONS = {
-      version: 12,
+      version: 13,
+      speaker_volume_level: 100,
       enabled_codes: 3,
       farnsworth_timing: 1,
       explicit_boundary_input: 1,
@@ -1112,6 +1113,7 @@
       currentOptions.enabled_codes = opt.enabled_codes !== undefined ? Number(opt.enabled_codes) : DEFAULT_OPTIONS.enabled_codes;
       currentOptions.farnsworth_timing = opt.farnsworth_timing !== undefined ? Number(opt.farnsworth_timing) : DEFAULT_OPTIONS.farnsworth_timing;
       currentOptions.explicit_boundary_input = opt.explicit_boundary_input !== undefined ? Number(opt.explicit_boundary_input) : DEFAULT_OPTIONS.explicit_boundary_input;
+      currentOptions.speaker_volume_level = opt.speaker_volume_level !== undefined ? Number(opt.speaker_volume_level) : DEFAULT_OPTIONS.speaker_volume_level;
       currentOptions.version = opt.version !== undefined ? Number(opt.version) : DEFAULT_OPTIONS.version;
       currentOptions.clear_input_source = opt.clear_input_source !== undefined ? Number(opt.clear_input_source) : DEFAULT_OPTIONS.clear_input_source;
       currentOptions.cancel_input_source = opt.cancel_input_source !== undefined ? Number(opt.cancel_input_source) : DEFAULT_OPTIONS.cancel_input_source;
@@ -1738,6 +1740,7 @@ function duplicateInputKeys(sources) {
             enabled_codes: Number(currentOptions.enabled_codes),
             farnsworth_timing: Number(currentOptions.farnsworth_timing),
             explicit_boundary_input: Number(currentOptions.explicit_boundary_input),
+            speaker_volume_level: Number(currentOptions.speaker_volume_level),
             game_interval_ms: Number(currentOptions.game_interval_ms),
             game_minimum_ms: Number(currentOptions.game_minimum_ms),
             game_reset_speed: Number(currentOptions.game_reset_speed),
