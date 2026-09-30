@@ -960,8 +960,9 @@
     var LEVEL_WPM = [5, 10, 15, 20];
 
     var DEFAULT_OPTIONS = {
-      version: 10,
+      version: 11,
       enabled_codes: 3,
+      farnsworth_timing: 1,
       game_interval_ms: 3000, game_minimum_ms: 1000, game_reset_speed: 1, game_sentence_count: 10,
       light_on_seconds: 1,
       clear_input_source: 16,
@@ -1037,6 +1038,7 @@
       currentOptions.game_reset_speed = opt.game_reset_speed !== undefined ? Number(opt.game_reset_speed) : DEFAULT_OPTIONS.game_reset_speed;
       currentOptions.game_sentence_count = opt.game_sentence_count !== undefined ? Number(opt.game_sentence_count) : DEFAULT_OPTIONS.game_sentence_count;
       currentOptions.enabled_codes = opt.enabled_codes !== undefined ? Number(opt.enabled_codes) : DEFAULT_OPTIONS.enabled_codes;
+      currentOptions.farnsworth_timing = opt.farnsworth_timing !== undefined ? Number(opt.farnsworth_timing) : DEFAULT_OPTIONS.farnsworth_timing;
       currentOptions.version = opt.version !== undefined ? Number(opt.version) : DEFAULT_OPTIONS.version;
       currentOptions.clear_input_source = opt.clear_input_source !== undefined ? Number(opt.clear_input_source) : DEFAULT_OPTIONS.clear_input_source;
       currentOptions.cancel_input_source = opt.cancel_input_source !== undefined ? Number(opt.cancel_input_source) : DEFAULT_OPTIONS.cancel_input_source;
@@ -1236,7 +1238,8 @@ function duplicateInputKeys(sources) {
       var isUnitValid = LEVEL_UNITS[level - 1] === unitMs;
 
       // Check Version & Payload
-      var isVersionValid = Number(currentOptions.version) === 10 && [1,2,3].indexOf(Number(currentOptions.enabled_codes)) !== -1;
+      var isVersionValid = Number(currentOptions.version) === 11 && [1,2,3].indexOf(Number(currentOptions.enabled_codes)) !== -1 &&
+        [0,1].indexOf(Number(currentOptions.farnsworth_timing)) !== -1;
 
       var errorMsg = '';
       if (!isVersionValid) {
@@ -1608,6 +1611,7 @@ function duplicateInputKeys(sources) {
           options: {
             version: Number(currentOptions.version),
             enabled_codes: Number(currentOptions.enabled_codes),
+            farnsworth_timing: Number(currentOptions.farnsworth_timing),
             game_interval_ms: Number(currentOptions.game_interval_ms),
             game_minimum_ms: Number(currentOptions.game_minimum_ms),
             game_reset_speed: Number(currentOptions.game_reset_speed),
