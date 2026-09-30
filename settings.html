@@ -238,30 +238,6 @@
       transform: translateX(22px);
     }
 
-    /* Range Slider */
-    .range-slider {
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.15);
-      outline: none;
-      -webkit-appearance: none;
-      accent-color: var(--accent);
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .range-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      border: 2px solid #ffffff;
-    }
-
     /* Value Badges & Tags */
     .value-badge {
       font-size: 13px;
@@ -641,7 +617,7 @@
       </div>
       <h1 data-i18n="title">Signals</h1>
       <p data-i18n="subtitle">터치,소리,게임으로 익히는 한글·영문 모르스 부호</p>
-      <div class="header-version" id="header_version">v0.9.0</div>
+      <div class="header-version" id="header_version">v1.0.0</div>
     </div>
 
     <!-- Error Alert Banner -->
@@ -677,6 +653,34 @@
         <p class="game-note" data-i18n="gameControls">DOWN 길게: 게임 토글 · BACK: 연습 복귀 · DOWN: 한영 전환 · DOWN 두 번: 소리 토글. 문장은 시계의 MENU → Game → 문장 가져오기에서 순환하여 가져옵니다.</p>
       </div>
     </section>
+
+  <!-- Saved sentences are supplied by PKJS; this origin never owns phone history. -->
+  <div class="section-title"><span>💾</span><span data-i18n="sentencesTitle">저장한 문장</span></div>
+  <div class="card">
+    <div id="sentences_list"></div>
+    <div style="display:flex; gap:8px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+      <button type="button" id="sentences-prev" class="sub-btn">◀</button>
+      <span id="sentences-page"></span>
+      <button type="button" id="sentences-next" class="sub-btn">▶</button>
+      <button type="button" id="sentences-delete" class="sub-btn" data-i18n="deleteSelected" disabled>선택한 문장 삭제</button>
+    </div>
+    <div id="sentence-menu" role="menu" hidden style="position:fixed; left:50%; transform:translateX(-50%); width:max-content; max-width:calc(100% - 24px); box-sizing:border-box; z-index:1000; padding:8px; background:#1e293b; border:1px solid var(--border-color); border-radius:8px; box-shadow:0 8px 24px #0008;">
+      <button type="button" id="sentence-edit" class="sub-btn" role="menuitem" data-i18n="editSentence">수정</button>
+      <button type="button" id="sentence-delete" class="sub-btn" role="menuitem" data-i18n="deleteSentence">삭제</button>
+      <button type="button" id="sentence-send" class="sub-btn" role="menuitem" data-i18n="sendSentence">시계로 전송</button>
+    </div>
+    <div data-i18n="sentenceTransferHelp" style="font-size:12px; margin:10px 0 16px; white-space:pre-line;">Checkbox는 삭제 전용입니다.
+문장의 수정·삭제·시계로 전송은 해당 문장을 클릭하여 메뉴에서 선택하세요</div>
+    <hr style="width:90%; margin:20px auto; border:0; border-top:1px solid var(--border-color);">
+    <label for="sentence-input" data-i18n="sentenceInputLabel">직접 입력</label>
+    <textarea id="sentence-input" rows="3" maxlength="254" style="display:block; box-sizing:border-box; width:100%; margin:8px 0; padding:10px; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color); border-radius:8px;"></textarea>
+    <div id="sentence-input-count" style="font-size:12px;" aria-live="polite">0 / 254 bytes</div>
+    <div data-i18n="sentenceInputHelp" style="font-size:12px; margin:8px 0;">최대 UTF-8 254바이트. 한글·영문 등 BMP 문자만 지원합니다. 입력한 문장은 시계로만 전송하며 저장 이력에 추가하지 않습니다.</div>
+    <button type="button" id="sentence-input-send" class="sub-btn" data-i18n="sendSentence" disabled>시계로 전송</button>
+    <div data-i18n="sentenceReplayHelp" style="font-size:12px; margin-top:8px; white-space:pre-line;">전송된 문장은 REPLAY에 기억됩니다.
+다시 들으려면 double-select-click을 누르세요.</div>
+
+  </div>
 
     <!-- Section 1: Input Mapping -->
     <div class="section-title">
@@ -732,54 +736,35 @@
     <!-- Section 2: Speed & Timing -->
     <div class="section-title">
       <span>⏱️</span>
-      <span data-i18n="speedSectionTitle">입력 속도 및 단위 시간 (Timing)</span>
+      <span data-i18n="speedSectionTitle">모스 속도 (WPM)</span>
     </div>
 
     <div class="card">
       <div class="card-row">
         <div class="card-info">
-          <div class="card-label" data-i18n="speedLevelLabel">입력 속도 프리셋</div>
-          <div class="card-desc" data-i18n="speedLevelDesc">훈련 숙련도에 맞춰 기본 템포 단계를 빠르게 선택할 수 있습니다.</div>
+          <div class="card-label" data-i18n="speedLevelLabel">연습 및 REPLAY 속도</div>
+          <div class="card-desc" data-i18n="speedLevelDesc">선택한 속도는 입력 판정과 REPLAY의 1T에 적용됩니다.</div>
         </div>
       </div>
 
       <div class="speed-btn-grid" id="speed_btn_group">
         <button type="button" class="sub-btn" data-level="1">
-          <span>1단계</span>
-          <span class="sub-btn-val">400ms</span>
+          <span>5 WPM</span>
+          <span class="sub-btn-val">1T = 240ms</span>
         </button>
-        <button type="button" class="sub-btn" data-level="2">
-          <span>2단계</span>
-          <span class="sub-btn-val">320ms</span>
+        <button type="button" class="sub-btn active" data-level="2">
+          <span>10 WPM</span>
+          <span class="sub-btn-val">1T = 120ms</span>
         </button>
-        <button type="button" class="sub-btn active" data-level="3">
-          <span>3단계</span>
-          <span class="sub-btn-val">250ms</span>
+        <button type="button" class="sub-btn" data-level="3">
+          <span>15 WPM</span>
+          <span class="sub-btn-val">1T = 80ms</span>
         </button>
         <button type="button" class="sub-btn" data-level="4">
-          <span>4단계</span>
-          <span class="sub-btn-val">200ms</span>
-        </button>
-        <button type="button" class="sub-btn" data-level="5">
-          <span>5단계</span>
-          <span class="sub-btn-val">160ms</span>
-        </button>
-        <button type="button" class="sub-btn" data-level="6">
-          <span>6단계</span>
-          <span class="sub-btn-val">120ms</span>
+          <span>20 WPM</span>
+          <span class="sub-btn-val">1T = 60ms</span>
         </button>
       </div>
-
-      <div class="divider"></div>
-
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="unitMsLabel">세부 단위 시간 (Unit Duration)</div>
-          <div class="card-desc" data-i18n="unitMsDesc">모스 부호 1단위(Dot)의 지속 시간입니다. (80 ~ 600ms)</div>
-        </div>
-        <div class="value-badge" id="unit_ms_val">250ms</div>
-      </div>
-      <input type="range" id="unit-ms-range" min="80" max="600" step="10" value="250" class="range-slider">
 
       <div class="divider"></div>
 
@@ -844,34 +829,6 @@
       </div>
     </div>
 
-  <!-- Saved sentences are supplied by PKJS; this origin never owns phone history. -->
-  <div class="section-title"><span>💾</span><span data-i18n="sentencesTitle">저장한 문장</span></div>
-  <div class="card">
-    <div id="sentences_list"></div>
-    <div style="display:flex; gap:8px; align-items:center; margin:12px 0; flex-wrap:wrap;">
-      <button type="button" id="sentences-prev" class="sub-btn">◀</button>
-      <span id="sentences-page"></span>
-      <button type="button" id="sentences-next" class="sub-btn">▶</button>
-      <button type="button" id="sentences-delete" class="sub-btn" data-i18n="deleteSelected" disabled>선택한 문장 삭제</button>
-    </div>
-    <div id="sentence-menu" role="menu" hidden style="position:fixed; left:50%; transform:translateX(-50%); width:max-content; max-width:calc(100% - 24px); box-sizing:border-box; z-index:1000; padding:8px; background:#1e293b; border:1px solid var(--border-color); border-radius:8px; box-shadow:0 8px 24px #0008;">
-      <button type="button" id="sentence-edit" class="sub-btn" role="menuitem" data-i18n="editSentence">수정</button>
-      <button type="button" id="sentence-delete" class="sub-btn" role="menuitem" data-i18n="deleteSentence">삭제</button>
-      <button type="button" id="sentence-send" class="sub-btn" role="menuitem" data-i18n="sendSentence">시계로 전송</button>
-    </div>
-    <div data-i18n="sentenceTransferHelp" style="font-size:12px; margin:10px 0 16px; white-space:pre-line;">Checkbox는 삭제 전용입니다.
-문장의 수정·삭제·시계로 전송은 해당 문장을 클릭하여 메뉴에서 선택하세요</div>
-    <hr style="width:90%; margin:20px auto; border:0; border-top:1px solid var(--border-color);">
-    <label for="sentence-input" data-i18n="sentenceInputLabel">직접 입력</label>
-    <textarea id="sentence-input" rows="3" maxlength="254" style="display:block; box-sizing:border-box; width:100%; margin:8px 0; padding:10px; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color); border-radius:8px;"></textarea>
-    <div id="sentence-input-count" style="font-size:12px;" aria-live="polite">0 / 254 bytes</div>
-    <div data-i18n="sentenceInputHelp" style="font-size:12px; margin:8px 0;">최대 UTF-8 254바이트. 한글·영문 등 BMP 문자만 지원합니다. 입력한 문장은 시계로만 전송하며 저장 이력에 추가하지 않습니다.</div>
-    <button type="button" id="sentence-input-send" class="sub-btn" data-i18n="sendSentence" disabled>시계로 전송</button>
-    <div data-i18n="sentenceReplayHelp" style="font-size:12px; margin-top:8px; white-space:pre-line;">전송된 문장은 REPLAY에 기억됩니다.
-다시 들으려면 double-select-click을 누르세요.</div>
-
-  </div>
-
   </div>
 
   <!-- Bottom Action Bar -->
@@ -892,12 +849,9 @@
         title: "Signals",
         subtitle: "터치,소리,게임으로 익히는 한글·영문 모르스 부호",
         inputSectionTitle: "입력 제스처 및 키 매핑",
-        speedSectionTitle: "입력 속도 및 단위 시간 (Timing)",
-        speedLevelLabel: "입력 속도 프리셋",
-        speedLevelDesc: "훈련 숙련도에 맞춰 기본 템포 단계를 빠르게 선택할 수 있습니다.",
-        levelSuffix: "단계",
-        unitMsLabel: "세부 단위 시간 (Unit Duration)",
-        unitMsDesc: "모스 부호 1단위(Dot)의 지속 시간입니다. (80 ~ 600ms)",
+        speedSectionTitle: "모스 속도 (WPM)",
+        speedLevelLabel: "연습 및 REPLAY 속도",
+        speedLevelDesc: "선택한 속도는 입력 판정과 REPLAY의 1T에 적용됩니다.",
         use3UnitsLabel: "3-Units 자동 글자 완성",
         use3UnitsDesc: "점 길이의 3배(3-Units) 동안 쉴 때 글자 입력을 자동으로 반영합니다. 끄면 수동 확인 동작으로만 완성합니다.",
         use7UnitsLabel: "7-Units 자동 띄어쓰기",
@@ -927,7 +881,7 @@
         clearSourceLabel: "전체 입력 지우기",
         clearSourceDesc: "시계의 입력 문장과 조합을 모두 지웁니다. 기본값은 위(UP) 버튼 길게 누르기입니다.",
         errDuplicate: "오류: 현재 글자 취소와 전체 입력 지우기는 서로 다른 동작을 지정해야 합니다.",
-        errUnitRange: "오류: 단위 시간(Unit Ms)은 80ms에서 600ms 사이의 정수여야 합니다.",
+        errUnitRange: "오류: WPM 속도를 선택하세요.",
         errPayloadVersion: "주의: 시계의 최신 설정을 불러온 뒤 다시 열어 주세요.",
         errIncomplete: "오류: 유효한 취소·지우기 동작과 연습 설정을 선택해 주세요.",
         groupTouch: "터치 제스처 (Touch Gestures)",
@@ -938,12 +892,9 @@
         title: "Signals",
         subtitle: "Learn Korean & English Morse Code with Touch, Sound and Games",
         inputSectionTitle: "Gesture & Key Mapping",
-        speedSectionTitle: "Input Speed & Timing Units",
-        speedLevelLabel: "Speed Level Preset",
-        speedLevelDesc: "Quickly select tempo according to your proficiency level.",
-        levelSuffix: "Level",
-        unitMsLabel: "Unit Duration (ms)",
-        unitMsDesc: "Duration of a single dot unit in milliseconds. (80 ~ 600ms)",
+        speedSectionTitle: "Morse Speed (WPM)",
+        speedLevelLabel: "Practice and REPLAY speed",
+        speedLevelDesc: "The selected speed sets 1T for input recognition and REPLAY.",
         use3UnitsLabel: "3-Units Auto Commit",
         use3UnitsDesc: "Automatically commits character when paused for 3x dot unit. Disable to commit manually.",
         use7UnitsLabel: "7-Units Auto Word Gap",
@@ -973,7 +924,7 @@
         clearSourceLabel: "Clear All Input",
         clearSourceDesc: "Clear all text and composition on the watch. Default: UP Long Click.",
         errDuplicate: "Error: Cancel and Clear must be assigned to different actions.",
-        errUnitRange: "Error: Unit duration must be an integer between 80ms and 600ms.",
+        errUnitRange: "Error: Select a WPM speed.",
         errPayloadVersion: "Notice: Please reload the latest settings from the watch and reopen.",
         errIncomplete: "Error: Please select valid cancel/clear actions and training settings.",
         groupTouch: "Touch Gestures",
@@ -1005,10 +956,11 @@
       { id: 18, group: 'button', en: 'SELECT Long Click', ko: '가운데(SELECT) 버튼 길게 누름' },
     ];
 
-    var LEVEL_UNITS = [400, 320, 250, 200, 160, 120];
+    var LEVEL_UNITS = [240, 120, 80, 60];
+    var LEVEL_WPM = [5, 10, 15, 20];
 
     var DEFAULT_OPTIONS = {
-      version: 9,
+      version: 10,
       enabled_codes: 3,
       game_interval_ms: 3000, game_minimum_ms: 1000, game_reset_speed: 1, game_sentence_count: 10,
       light_on_seconds: 1,
@@ -1018,8 +970,8 @@
       use_7_units: 0,
       training_mode: 0, tolerance_percent: 10,
       novice_policy: 12, intermediate_policy: 4, advanced_policy: 3, touch_layout: 3,
-      speedLevel: 3,
-      unitMs: 250,
+      speedLevel: 2,
+      unitMs: 120,
       visualFeedback: 1
     };
 
@@ -1228,7 +1180,7 @@ function duplicateInputKeys(sources) {
         var lvl = btn.getAttribute('data-level');
         var firstSpan = btn.querySelector('span:first-child');
         if (firstSpan) {
-          firstSpan.textContent = lvl + (dict.levelSuffix ? (lang === 'ko' ? '단계' : ' Level') : ' Lv');
+          firstSpan.textContent = LEVEL_WPM[lvl - 1] + ' WPM';
         }
       });
 
@@ -1250,29 +1202,10 @@ function duplicateInputKeys(sources) {
     // ==========================================
     // Validation & State Synchronization
     // ==========================================
-    function updateUnitDisplay(ms) {
-      var badge = document.getElementById('unit_ms_val');
-      if (badge) badge.textContent = ms + 'ms';
-      var range = document.getElementById('unit-ms-range');
-      if (range && Number(range.value) !== ms) {
-        range.value = ms;
-      }
-    }
-
-    function syncSpeedPreset(ms) {
-      var matchingLevel = -1;
-      for (var i = 0; i < LEVEL_UNITS.length; i++) {
-        if (LEVEL_UNITS[i] === ms) {
-          matchingLevel = i + 1;
-          break;
-        }
-      }
-
-      currentOptions.speedLevel = matchingLevel > 0 ? matchingLevel : 3;
-
+    function syncSpeedPreset() {
       document.querySelectorAll('.speed-btn-grid .sub-btn').forEach(function(btn) {
         var lvl = Number(btn.getAttribute('data-level'));
-        btn.classList.toggle('active', lvl === matchingLevel);
+        btn.classList.toggle('active', lvl === currentOptions.speedLevel);
       });
     }
 
@@ -1299,10 +1232,11 @@ function duplicateInputKeys(sources) {
       });
 
       // Check Unit Ms
-      var isUnitValid = isFinite(unitMs) && Math.floor(unitMs) === unitMs && unitMs >= 80 && unitMs <= 600;
+      var level = Number(currentOptions.speedLevel);
+      var isUnitValid = LEVEL_UNITS[level - 1] === unitMs;
 
       // Check Version & Payload
-      var isVersionValid = Number(currentOptions.version) === 9 && [1,2,3].indexOf(Number(currentOptions.enabled_codes)) !== -1;
+      var isVersionValid = Number(currentOptions.version) === 10 && [1,2,3].indexOf(Number(currentOptions.enabled_codes)) !== -1;
 
       var errorMsg = '';
       if (!isVersionValid) {
@@ -1590,7 +1524,6 @@ function duplicateInputKeys(sources) {
       bindTraining();
       var clear = document.getElementById('clear-source');
       var cancel = document.getElementById('cancel-source');
-      var range = document.getElementById('unit-ms-range');
       var visual = document.getElementById('visual-feedback');
       document.getElementById('light-on-seconds').addEventListener('change', function(e) {
         currentOptions.light_on_seconds = Number(e.target.value);
@@ -1606,27 +1539,18 @@ function duplicateInputKeys(sources) {
         validate();
       });
 
-      range.addEventListener('input', function(e) {
-        var val = Number(e.target.value);
-        currentOptions.unitMs = val;
-        updateUnitDisplay(val);
-        syncSpeedPreset(val);
-        validate();
-      });
-
       visual.addEventListener('change', function(e) {
         currentOptions.visualFeedback = e.target.checked ? 1 : 0;
       });
 
-      // Speed Level Buttons
+      // WPM preset buttons
       document.querySelectorAll('.speed-btn-grid .sub-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var lvl = Number(btn.getAttribute('data-level'));
-          if (lvl >= 1 && lvl <= 6) {
+          if (lvl >= 1 && lvl <= LEVEL_UNITS.length) {
             currentOptions.speedLevel = lvl;
             currentOptions.unitMs = LEVEL_UNITS[lvl - 1];
-            updateUnitDisplay(currentOptions.unitMs);
-            syncSpeedPreset(currentOptions.unitMs);
+            syncSpeedPreset();
             validate();
           }
         });
@@ -1806,8 +1730,7 @@ function duplicateInputKeys(sources) {
       document.getElementById('light-on-seconds').value = String(currentOptions.light_on_seconds);
       document.getElementById('visual-feedback').checked = currentOptions.visualFeedback !== 0;
 
-      updateUnitDisplay(currentOptions.unitMs);
-      syncSpeedPreset(currentOptions.unitMs);
+      syncSpeedPreset();
 
       detectLanguage();
       setupEventListeners();
