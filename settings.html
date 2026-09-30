@@ -184,6 +184,10 @@
       line-height: 1.45;
     }
 
+    .touch-intro { margin-bottom: 18px; }
+
+    .touch-layout-label.inactive { color: #b98558; }
+
     .divider {
       height: 1px;
       background: var(--border-color);
@@ -269,6 +273,11 @@
     .select-input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .select-input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .select-input optgroup {
@@ -643,7 +652,7 @@
       </div>
       <div class="game-panel"><div class="game-panel-head"><h3 data-i18n="gameHistory">매치 히스토리</h3><small data-i18n="gameDetails">기록을 눌러 상세 보기</small></div><div id="game-history"></div></div>
       <div class="game-panel">
-        <div class="game-panel-head"><h3 data-i18n="gameSettings">게임 설정</h3><small>GAME RULES</small></div>
+        <div class="game-panel-head"><h3 data-i18n="gameSettings">게임 설정</h3><small data-i18n="gameRules">게임 규칙</small></div>
         <div class="game-options">
           <label><span data-i18n="gameInterval">이동간격</span><select id="game_interval_ms"></select></label>
           <label><span data-i18n="gameMinimum">최소 이동간격</span><select id="game_minimum_ms"></select></label>
@@ -682,6 +691,40 @@
 
   </div>
 
+    <div class="section-title">
+      <span>⏱️</span>
+      <span data-i18n="speedSectionTitle">기본 모스 속도 (WPM · 1T)</span>
+    </div>
+    <div class="card">
+      <div class="card-label" data-i18n="speedLevelLabel">WPM과 1T</div>
+      <div class="card-desc" data-i18n="speedLevelDesc">1T는 점 하나의 기준 길이입니다. WPM이 높을수록 1T가 짧아집니다. 선택한 1T는 연습·게임·REPLAY에 공통으로 적용됩니다.</div>
+      <div class="speed-btn-grid" id="speed_btn_group">
+        <button type="button" class="sub-btn" data-level="1"><span>5 WPM</span><span class="sub-btn-val">1T = 240ms</span></button>
+        <button type="button" class="sub-btn active" data-level="2"><span>10 WPM</span><span class="sub-btn-val">1T = 120ms</span></button>
+        <button type="button" class="sub-btn" data-level="3"><span>15 WPM</span><span class="sub-btn-val">1T = 80ms</span></button>
+        <button type="button" class="sub-btn" data-level="4"><span>20 WPM</span><span class="sub-btn-val">1T = 60ms</span></button>
+      </div>
+      <div class="divider"></div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="ebiLabel">명시적 경계 입력</div>
+          <div class="card-desc" data-i18n="ebiDesc">모르스 부호를 처음 배우는 사람을 위한 방식입니다. 점·선을 입력한 뒤 화면의 지정된 곳을 터치해 “이 글자 끝” 또는 “여기서 띄어쓰기”를 직접 알려줍니다. 글자나 단어 사이의 쉬는 시간을 맞춰 기다릴 필요가 없습니다.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="explicit-boundary-input"><span class="slider-track"></span></label>
+      </div>
+      <div class="divider"></div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="farnsworthLabel">판스워스 타이밍</div>
+          <div class="card-desc" data-i18n="farnsworthDesc">명시적 경계 입력을 끈 경우, 점·선 길이는 그대로 두고 글자와 단어 사이에 쉬는 시간을 4배로 늘립니다.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="farnsworth-timing"><span class="slider-track"></span></label>
+      </div>
+      <div class="callout-box" style="margin-top:16px;" aria-live="polite">
+        <span>💡</span><div id="timing-relationship"></div>
+      </div>
+    </div>
+
     <!-- Section 1: Input Mapping -->
     <div class="section-title">
       <span>🕹️</span>
@@ -689,24 +732,25 @@
     </div>
 
     <div class="card">
-      <div class="card-label">Primary · 터치 입력</div>
-      <div class="card-desc">처음 누른 위치로 역할을 정합니다. 이동 중 중앙을 넘어도 역할은 바뀌지 않습니다.</div>
-      <label class="card-label" for="touch-axis">나누는 기준</label>
-      <select id="touch-axis" class="select-input"><option value="0">왼쪽 / 오른쪽</option><option value="1">위 / 아래</option></select>
-      <label class="card-label" for="touch-layout">영역별 역할</label>
+      <div class="card-label" data-i18n="touchInputTitle">터치 입력</div>
+      <div class="card-desc touch-intro" data-i18n="touchInputDesc">명시적 경계 입력을 켜면 화면을 두 영역으로 나눕니다. 어느 쪽에서 점·선을 입력할지 선택하세요.</div>
+      <div class="divider"></div>
+      <label class="card-label touch-layout-label" for="touch-axis" data-i18n="touchAxisLabel">화면을 나누는 방향</label>
+      <select id="touch-axis" class="select-input"><option value="0" data-i18n="touchAxisHorizontal">왼쪽 / 오른쪽</option><option value="1" data-i18n="touchAxisVertical">위 / 아래</option></select>
+      <label class="card-label touch-layout-label" for="touch-layout" data-i18n="touchLayoutLabel">영역별 입력</label>
       <select id="touch-layout" class="select-input" aria-label="터치 영역">
         <option value="0">왼쪽 점·선 / 오른쪽 글자 완성·띄어쓰기</option>
         <option value="1">오른쪽 점·선 / 왼쪽 글자 완성·띄어쓰기</option>
       </select>
       <div class="divider"></div>
-      <label class="card-label" for="training-mode">연습 모드</label>
-      <select id="training-mode" class="select-input"><option value="0">초급 · NoviceMode</option><option value="1">중급 · IntermediateMode</option><option value="2">상급 · AdvancedMode</option></select>
+      <label class="card-label" for="training-mode" data-i18n="trainingModeLabel">입력 판정 레벨</label>
+      <select id="training-mode" class="select-input"><option value="0" data-i18n="modeNovice">하</option><option value="1" data-i18n="modeIntermediate">중</option><option value="2" data-i18n="modeAdvanced">상</option></select>
       <div class="divider"></div>
-      <label class="card-label" for="tolerance-percent">허용오차</label>
+      <label class="card-label" for="tolerance-percent" data-i18n="toleranceLabel">허용오차</label>
       <select id="tolerance-percent" class="select-input"><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="30">30%</option></select>
-      <div class="card-desc">모드별 표에서 이 허용오차를 적용할지 선택합니다.</div>
+      <div class="card-desc" data-i18n="toleranceDesc">레벨별 표에서 이 허용오차를 적용할지 선택합니다.</div>
     </div>
-    <div class="section-title">Secondary · 보조 물리 버튼 (선택 사항)</div>
+    <div class="section-title" data-i18n="buttonSectionTitle">보조 물리 버튼 (선택 사항)</div>
     <div class="card">
       <div class="card-row">
         <div class="card-info">
@@ -733,55 +777,28 @@
       </div>
     </div>
 
-    <!-- Section 2: Speed & Timing -->
+    <!-- Practice rules -->
     <div class="section-title">
-      <span>⏱️</span>
-      <span data-i18n="speedSectionTitle">모스 속도 (WPM)</span>
+      <span>📋</span>
+      <span data-i18n="practiceRulesSectionTitle">연습 입력 규칙</span>
     </div>
 
     <div class="card">
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="speedLevelLabel">연습 및 REPLAY 속도</div>
-          <div class="card-desc" data-i18n="speedLevelDesc">선택한 속도는 입력 판정과 REPLAY의 1T에 적용됩니다.</div>
-        </div>
-      </div>
-
-      <div class="speed-btn-grid" id="speed_btn_group">
-        <button type="button" class="sub-btn" data-level="1">
-          <span>5 WPM</span>
-          <span class="sub-btn-val">1T = 240ms</span>
-        </button>
-        <button type="button" class="sub-btn active" data-level="2">
-          <span>10 WPM</span>
-          <span class="sub-btn-val">1T = 120ms</span>
-        </button>
-        <button type="button" class="sub-btn" data-level="3">
-          <span>15 WPM</span>
-          <span class="sub-btn-val">1T = 80ms</span>
-        </button>
-        <button type="button" class="sub-btn" data-level="4">
-          <span>20 WPM</span>
-          <span class="sub-btn-val">1T = 60ms</span>
-        </button>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="card-label">모드별 적용 규칙</div>
-      <div class="card-desc">모드는 아래 규칙을 선택합니다. 허용오차 값은 모드와 별개입니다.</div>
+      <div class="card-label" data-i18n="policyTitle">레벨별 적용 규칙</div>
+      <div class="card-desc" data-i18n="policyCaution" style="margin-bottom:10px;">이 규칙은 가능한 변경하지 마세요. 먼저 WPM, 명시적 경계 입력, 판스워스 타이밍을 조정하며 연습하고, 입력 판정을 정말 세밀하게 조정해야 할 때만 사용하세요.</div>
+      <div class="card-desc" id="policy-desc">각 레벨은 아래 입력 규칙을 사용합니다.</div>
       <div style="overflow-x:auto; margin-top:12px;">
       <table class="mode-policy-table" style="width:100%; min-width:480px; border-collapse:collapse; text-align:left;">
-      <thead><tr><th>규칙</th><th>초급 · Novice</th><th>중급 · Intermediate</th><th>상급 · Advanced</th></tr></thead><tbody>
-<tr><th style="padding:10px 4px;">3-Units 자동 입력 완성</th><td><select aria-label="novice 3-Units 자동 입력 완성" id="policy-novice-1" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="intermediate 3-Units 자동 입력 완성" id="policy-intermediate-1" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="advanced 3-Units 자동 입력 완성" id="policy-advanced-1" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
-<tr><th style="padding:10px 4px;">7-Units 자동 띄어쓰기</th><td><select aria-label="novice 7-Units 자동 띄어쓰기" id="policy-novice-2" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="intermediate 7-Units 자동 띄어쓰기" id="policy-intermediate-2" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="advanced 7-Units 자동 띄어쓰기" id="policy-advanced-2" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
-<tr><th style="padding:10px 4px;">선택한 허용오차 적용</th><td><select aria-label="novice 선택한 허용오차 적용" id="policy-novice-4" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="intermediate 선택한 허용오차 적용" id="policy-intermediate-4" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="advanced 선택한 허용오차 적용" id="policy-advanced-4" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
-<tr><th style="padding:10px 4px;">3-Units 초과 누름 허용</th><td><select aria-label="novice 3-Units 초과 누름 허용" id="policy-novice-8" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="intermediate 3-Units 초과 누름 허용" id="policy-intermediate-8" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="advanced 3-Units 초과 누름 허용" id="policy-advanced-8" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
+      <thead><tr><th>규칙</th><th>하</th><th>중</th><th>상</th></tr></thead><tbody>
+<tr><th style="padding:10px 4px;">3-Units 자동 입력 완성</th><td><select aria-label="하 3-Units 자동 입력 완성" id="policy-novice-1" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="중 3-Units 자동 입력 완성" id="policy-intermediate-1" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="상 3-Units 자동 입력 완성" id="policy-advanced-1" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
+<tr><th style="padding:10px 4px;">7-Units 자동 띄어쓰기</th><td><select aria-label="하 7-Units 자동 띄어쓰기" id="policy-novice-2" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="중 7-Units 자동 띄어쓰기" id="policy-intermediate-2" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="상 7-Units 자동 띄어쓰기" id="policy-advanced-2" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
+<tr><th style="padding:10px 4px;">선택한 허용오차 적용</th><td><select aria-label="하 선택한 허용오차 적용" id="policy-novice-4" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="중 선택한 허용오차 적용" id="policy-intermediate-4" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="상 선택한 허용오차 적용" id="policy-advanced-4" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
+<tr><th style="padding:10px 4px;">3-Units 초과 누름 허용</th><td><select aria-label="하 3-Units 초과 누름 허용" id="policy-novice-8" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="중 3-Units 초과 누름 허용" id="policy-intermediate-8" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td><td><select aria-label="상 3-Units 초과 누름 허용" id="policy-advanced-8" class="select-input"><option value="0">사용 안 함</option><option value="1">사용</option></select></td></tr>
 <tr><th style="padding:10px 4px;">1-unit 초과 시 dash 표시</th><td><select class="select-input" disabled aria-label="1-unit 초과 시 dash 표시"><option>항상 사용</option></select></td><td><select class="select-input" disabled aria-label="1-unit 초과 시 dash 표시"><option>항상 사용</option></select></td><td><select class="select-input" disabled aria-label="1-unit 초과 시 dash 표시"><option>항상 사용</option></select></td></tr>
 <tr><th style="padding:10px 4px;">마지막 노드 자동 인식</th><td><select class="select-input" disabled aria-label="마지막 노드 자동 인식"><option>항상 사용</option></select></td><td><select class="select-input" disabled aria-label="마지막 노드 자동 인식"><option>항상 사용</option></select></td><td><select class="select-input" disabled aria-label="마지막 노드 자동 인식"><option>항상 사용</option></select></td></tr>
-<tr><th style="padding:10px 4px;">수동 글자 경계 지정</th><td><select class="select-input" disabled aria-label="수동 글자 경계 지정"><option>항상 사용</option></select></td><td><select class="select-input" disabled aria-label="수동 글자 경계 지정"><option>항상 사용</option></select></td><td><select class="select-input" disabled aria-label="수동 글자 경계 지정"><option>항상 사용</option></select></td></tr>
+<tr><th style="padding:10px 4px;">명시적 글자 경계 지정</th><td><select class="select-input" disabled aria-label="명시적 글자 경계 지정"><option>EBI 켜짐 시 사용</option></select></td><td><select class="select-input" disabled aria-label="명시적 글자 경계 지정"><option>EBI 켜짐 시 사용</option></select></td><td><select class="select-input" disabled aria-label="명시적 글자 경계 지정"><option>EBI 켜짐 시 사용</option></select></td></tr>
       </tbody></table></div>
-      <div class="callout-box">허용오차는 3U 상한에 적용됩니다. 예: 10% → 3.3U까지 허용. 1U를 넘으면 dash로 표시하는 기준은 바뀌지 않습니다. 초과 누름을 허용하면 상한을 넘겨도 dash로 입력합니다.</div>
+      <div class="callout-box" data-i18n="policyHelp">허용오차는 3U 상한에 적용됩니다. 예: 10% → 3.3U까지 허용. 1U를 넘으면 dash로 표시하는 기준은 바뀌지 않습니다. 초과 누름을 허용하면 상한을 넘겨도 dash로 입력합니다.</div>
     </div>
 
     <!-- Section 3: Feedback & Audio Simulator -->
@@ -823,7 +840,7 @@
         </button>
 
         <div id="morse_visualizer" class="morse-visualizer">
-          <div style="font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 4px;">TEST: "MORSE" (· 1 Unit / — 3 Units)</div>
+          <div data-i18n="audioTestLabel" style="font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 4px;">미리듣기: "MORSE" (· 1T / — 3T)</div>
           <div id="morse_code_display" class="morse-code-display"></div>
         </div>
       </div>
@@ -849,9 +866,36 @@
         title: "Signals",
         subtitle: "터치,소리,게임으로 익히는 한글·영문 모르스 부호",
         inputSectionTitle: "입력 제스처 및 키 매핑",
-        speedSectionTitle: "모스 속도 (WPM)",
-        speedLevelLabel: "연습 및 REPLAY 속도",
-        speedLevelDesc: "선택한 속도는 입력 판정과 REPLAY의 1T에 적용됩니다.",
+        touchInputTitle: "터치 입력",
+        touchInputDesc: "명시적 경계 입력을 켜면 화면을 두 영역으로 나눕니다. 어느 쪽에서 점·선을 입력할지 선택하세요.",
+        ebiLabel: "명시적 경계 입력",
+        ebiDesc: "모르스 부호를 처음 배우는 사람을 위한 방식입니다. 점·선을 입력한 뒤 화면의 지정된 곳을 터치해 “이 글자 끝” 또는 “여기서 띄어쓰기”를 직접 알려줍니다. 글자나 단어 사이의 쉬는 시간을 맞춰 기다릴 필요가 없습니다.",
+        farnsworthLabel: "판스워스 타이밍",
+        farnsworthDesc: "명시적 경계 입력을 끈 경우, 점·선 길이는 그대로 두고 글자와 단어 사이에 쉬는 시간을 4배로 늘립니다.",
+        timingEbiOnFarnOn: "화면의 지정된 곳을 터치해 글자 완성이나 띄어쓰기를 직접 알려줍니다. 판스워스가 켜져 있어도 이 방식의 연습·게임·REPLAY에는 적용되지 않습니다. 아래에서 자동 완성·띄어쓰기를 켜면 기다리는 방식도 함께 쓸 수 있습니다.",
+        timingEbiOnFarnOff: "화면의 지정된 곳을 터치해 글자 완성이나 띄어쓰기를 직접 알려줍니다. 아래에서 자동 완성·띄어쓰기를 켜면 기다리는 방식도 함께 쓸 수 있습니다. 연습·게임·REPLAY의 간격은 기본값을 사용합니다.",
+        timingEbiOffFarnOn: "화면 어디를 터치해도 점·선이 입력됩니다. 입력을 멈추고 잠시 기다리면 글자가 완성되고, 더 기다리면 띄어쓰기가 됩니다. 판스워스는 연습·게임·REPLAY에서 이 쉬는 시간을 4배로 늘립니다.",
+        timingEbiOffFarnOff: "화면 어디를 터치해도 점·선이 입력됩니다. 입력을 멈추고 잠시 기다리면 글자가 완성되고, 더 기다리면 띄어쓰기가 됩니다. 연습·게임·REPLAY에는 기본 쉬는 시간이 적용됩니다.",
+        touchAxisLabel: "화면을 나누는 방향", touchAxisHorizontal: "왼쪽 / 오른쪽", touchAxisVertical: "위 / 아래",
+        touchLayoutLabel: "영역별 입력", touchLayoutAria: "터치 영역",
+        touchLayoutHorizontal: ["왼쪽 점·선 / 오른쪽 글자 완성·띄어쓰기", "오른쪽 점·선 / 왼쪽 글자 완성·띄어쓰기"],
+        touchLayoutVertical: ["위쪽 점·선 / 아래쪽 글자 완성·띄어쓰기", "아래쪽 점·선 / 위쪽 글자 완성·띄어쓰기"],
+        trainingModeLabel: "입력 판정 레벨", modeNovice: "하", modeIntermediate: "중", modeAdvanced: "상",
+        toleranceLabel: "허용오차", toleranceDesc: "레벨별 표에서 이 허용오차를 적용할지 선택합니다.",
+        buttonSectionTitle: "보조 물리 버튼 (선택 사항)",
+        policyTitle: "레벨별 적용 규칙",
+        policyCaution: "이 규칙은 가능한 변경하지 마세요. 먼저 WPM, 명시적 경계 입력, 판스워스 타이밍을 조정하며 연습하고, 입력 판정을 정말 세밀하게 조정해야 할 때만 사용하세요.",
+        policyDescEbiOn: "글자 완성·띄어쓰기를 직접 터치할 수 있습니다. 아래에서 자동 완성·띄어쓰기를 켜면 쉬는 시간으로 구분하는 방법도 함께 쓸 수 있습니다. 허용오차와 길게 누르기 규칙은 점·선 판정에 적용됩니다.",
+        policyDescEbiOff: "쉬는 시간에 따른 자동 글자 완성·띄어쓰기가 모든 레벨에서 항상 켜집니다. 허용오차와 길게 누르기 규칙은 레벨별 선택에 따릅니다.",
+        policyHeaders: ["규칙", "하", "중", "상"],
+        policyRows: ["3T 후 글자 자동 완성", "7T 후 자동 띄어쓰기", "선택한 허용오차 적용", "3T 초과 누름 허용", "1T 초과 시 선으로 표시", "마지막 노드 자동 인식", "명시적 글자 경계 지정"],
+        policyOff: "사용 안 함", policyOn: "사용", policyAlways: "항상 사용", policyEbi: "EBI 켜짐 시 사용",
+        policyHelp: "허용오차는 3T 상한에 적용됩니다. 예: 10% → 3.3T까지 허용. 1T를 넘으면 선으로 표시하는 기준은 바뀌지 않습니다. 초과 누름을 허용하면 상한을 넘겨도 선으로 입력합니다.",
+        audioTestLabel: "미리듣기: \"MORSE\" (· 1T / — 3T)",
+        speedSectionTitle: "기본 모스 속도 (WPM · 1T)",
+        speedLevelLabel: "WPM과 1T",
+        speedLevelDesc: "1T는 점 하나의 기준 길이입니다. WPM이 높을수록 1T가 짧아집니다. 선택한 1T는 연습·게임·REPLAY에 공통으로 적용됩니다.",
+        practiceRulesSectionTitle: "연습 입력 규칙",
         use3UnitsLabel: "3-Units 자동 글자 완성",
         use3UnitsDesc: "점 길이의 3배(3-Units) 동안 쉴 때 글자 입력을 자동으로 반영합니다. 끄면 수동 확인 동작으로만 완성합니다.",
         use7UnitsLabel: "7-Units 자동 띄어쓰기",
@@ -862,7 +906,7 @@
         visualFeedbackLabel: "시각 피드백 (Visual Feedback)",
         visualFeedbackDesc: "신호 입력 시 화면에 펄스 및 모스 부호 경로를 시각적으로 표시합니다.",
         audioPreviewTitle: "모스 리듬 미리듣기 (Web Audio)",
-        audioPreviewDesc: "설정된 Unit 시간(ms)에 맞춘 실제 모스 부호 사운드('MORSE') 템포를 지금 미리 들어보세요. 재생 속도는 ‘입력 속도 및 단위 시간 (Timing)’ 그룹의 설정에 영향을 받습니다.",
+        audioPreviewDesc: "선택한 WPM 속도로 'MORSE'를 미리 들어보세요.",
         testStatusReady: "대기",
         testStatusPlaying: "재생 중...",
         btnTestAudio: "사운드 템포 체험",
@@ -892,9 +936,36 @@
         title: "Signals",
         subtitle: "Learn Korean & English Morse Code with Touch, Sound and Games",
         inputSectionTitle: "Gesture & Key Mapping",
-        speedSectionTitle: "Morse Speed (WPM)",
-        speedLevelLabel: "Practice and REPLAY speed",
-        speedLevelDesc: "The selected speed sets 1T for input recognition and REPLAY.",
+        touchInputTitle: "Touch Input",
+        touchInputDesc: "When EBI is on, the screen has two touch areas. Choose which area enters dots and dashes.",
+        ebiLabel: "Explicit Boundary Input (EBI)",
+        ebiDesc: "An easier way to start learning Morse code. After entering dots and dashes, touch the designated area to say ‘this character is done’ or ‘add a space here.’ You do not have to time the pause between characters or words.",
+        farnsworthLabel: "Farnsworth Timing",
+        farnsworthDesc: "When EBI is off, dots and dashes keep the same length while pauses between characters and words become four times longer.",
+        timingEbiOnFarnOn: "Touch the designated area to finish a character or add a space yourself. Even when Farnsworth is on, it does not affect practice, GAME, or REPLAY in this mode. You can also enable automatic completion and spacing below if you want to use timed pauses too.",
+        timingEbiOnFarnOff: "Touch the designated area to finish a character or add a space yourself. You can also enable automatic completion and spacing below if you want to use timed pauses too. Practice, GAME, and REPLAY use normal spacing.",
+        timingEbiOffFarnOn: "Touch anywhere to enter dots and dashes. Pause briefly to finish a character; pause longer to add a space. Farnsworth makes these pauses four times longer in practice, GAME, and REPLAY.",
+        timingEbiOffFarnOff: "Touch anywhere to enter dots and dashes. Pause briefly to finish a character; pause longer to add a space. Practice, GAME, and REPLAY use normal pause lengths.",
+        touchAxisLabel: "Screen Split", touchAxisHorizontal: "Left / Right", touchAxisVertical: "Top / Bottom",
+        touchLayoutLabel: "Area Roles", touchLayoutAria: "Touch areas",
+        touchLayoutHorizontal: ["Left dots and dashes / Right character and space", "Right dots and dashes / Left character and space"],
+        touchLayoutVertical: ["Top dots and dashes / Bottom character and space", "Bottom dots and dashes / Top character and space"],
+        trainingModeLabel: "Input Judgment Level", modeNovice: "Low", modeIntermediate: "Middle", modeAdvanced: "High",
+        toleranceLabel: "Timing Tolerance", toleranceDesc: "Choose whether each level uses this tolerance in the table below.",
+        buttonSectionTitle: "Optional Physical Buttons",
+        policyTitle: "Rules by Level",
+        policyCaution: "Leave these rules unchanged if possible. Practice by adjusting WPM, Explicit Boundary Input, and Farnsworth Timing first. Use this table only when you need fine control over input recognition.",
+        policyDescEbiOn: "You can finish characters and add spaces by touching the designated area. Enable automatic completion and spacing below if you also want to use timed pauses. Tolerance and long-hold rules affect dot and dash recognition.",
+        policyDescEbiOff: "Timed character completion and spacing are always on at every level. Tolerance and long-hold rules still follow the selected level.",
+        policyHeaders: ["Rule", "Low", "Middle", "High"],
+        policyRows: ["Auto complete after 3T", "Auto space after 7T", "Apply selected tolerance", "Allow holds beyond 3T", "Show a dash beyond 1T", "Recognize final node automatically", "Explicit character boundary"],
+        policyOff: "Off", policyOn: "On", policyAlways: "Always on", policyEbi: "On when EBI is enabled",
+        policyHelp: "Tolerance applies to the 3T hold limit. For example, 10% allows up to 3.3T. A hold longer than 1T still appears as a dash. Allowing long holds accepts a dash beyond the upper limit.",
+        audioTestLabel: "Preview: \"MORSE\" (· 1T / — 3T)",
+        speedSectionTitle: "Base Morse Speed (WPM · 1T)",
+        speedLevelLabel: "WPM and 1T",
+        speedLevelDesc: "1T is the reference length of one dot. Higher WPM means a shorter 1T. The selected 1T applies to practice, GAME, and REPLAY.",
+        practiceRulesSectionTitle: "Practice Input Rules",
         use3UnitsLabel: "3-Units Auto Commit",
         use3UnitsDesc: "Automatically commits character when paused for 3x dot unit. Disable to commit manually.",
         use7UnitsLabel: "7-Units Auto Word Gap",
@@ -905,7 +976,7 @@
         visualFeedbackLabel: "Visual Feedback",
         visualFeedbackDesc: "Show visual pulse and morse path animation on screen during input.",
         audioPreviewTitle: "Morse Rhythm Preview (Web Audio)",
-        audioPreviewDesc: "Listen to the current unit duration rhythm ('MORSE') on your device. Playback speed is affected by the settings in the ‘Input Speed & Timing Units’ group.",
+        audioPreviewDesc: "Preview 'MORSE' at the selected WPM speed.",
         testStatusReady: "Ready",
         testStatusPlaying: "Playing...",
         btnTestAudio: "Play Rhythm Preview",
@@ -936,14 +1007,14 @@
       gameTitle:'나의 게임 기록', gameSubtitle:'밀려오는 문장을 지우고, 나의 입력 기록을 넘어서세요.',
       gameAverage:'평균 CPM', gameCleared:'삭제 성공', gameWins:'전체 승리', gameTrend:'입력 속도 추이', gameRecent:'최근 30게임 · CPM',
       gameWin:'승리', gameLoss:'게임 오버', gameQuit:'사용자 종료', gameFormula:'CPM은 실제 플레이 1분당 삭제에 성공한 글자 수입니다. 시작 대기·메뉴·포커스 상실 시간은 제외합니다.',
-      gameHistory:'매치 히스토리', gameDetails:'기록을 눌러 상세 보기', gameSettings:'게임 설정', gameInterval:'이동간격', gameMinimum:'최소 이동간격', gameReset:'다음 문장 속도', gameCount:'기억할 문장 수',
+      gameHistory:'매치 히스토리', gameDetails:'기록을 눌러 상세 보기', gameSettings:'게임 설정', gameRules:'게임 규칙', gameInterval:'이동간격', gameMinimum:'최소 이동간격', gameReset:'다음 문장 속도', gameCount:'기억할 문장 수',
       gameControls:'DOWN 길게: 게임 토글 · BACK: 연습 복귀 · DOWN: 한영 전환 · DOWN 두 번: 소리 토글. 문장은 시계의 MENU → Game → 문장 가져오기에서 순환하여 가져옵니다.'
     });
     Object.assign(i18nData.en, {
       gameTitle:'Your game record', gameSubtitle:'Clear the incoming words. Build your personal best.',
       gameAverage:'AVERAGE CPM', gameCleared:'CHARACTERS CLEARED', gameWins:'VICTORIES', gameTrend:'SPEED OVER TIME', gameRecent:'Last 30 games · CPM',
       gameWin:'Victory', gameLoss:'Game over', gameQuit:'Quit', gameFormula:'CPM counts successfully cleared characters per minute of active play. Waiting, menus and time out of focus are excluded.',
-      gameHistory:'MATCH HISTORY', gameDetails:'Tap a match for details', gameSettings:'GAME SETTINGS', gameInterval:'Starting interval', gameMinimum:'Minimum interval', gameReset:'Next sentence speed', gameCount:'Sentences to remember',
+      gameHistory:'MATCH HISTORY', gameDetails:'Tap a match for details', gameSettings:'GAME SETTINGS', gameRules:'GAME RULES', gameInterval:'Starting interval', gameMinimum:'Minimum interval', gameReset:'Next sentence speed', gameCount:'Sentences to remember',
       gameControls:'Hold DOWN: toggle game · BACK: return to practice · DOWN: language · double DOWN: sound. Fetch the next saved page from MENU → Game → Get sentences on your watch.'
     });
     var currentLang = 'ko';
@@ -960,9 +1031,10 @@
     var LEVEL_WPM = [5, 10, 15, 20];
 
     var DEFAULT_OPTIONS = {
-      version: 11,
+      version: 12,
       enabled_codes: 3,
       farnsworth_timing: 1,
+      explicit_boundary_input: 1,
       game_interval_ms: 3000, game_minimum_ms: 1000, game_reset_speed: 1, game_sentence_count: 10,
       light_on_seconds: 1,
       clear_input_source: 16,
@@ -1039,6 +1111,7 @@
       currentOptions.game_sentence_count = opt.game_sentence_count !== undefined ? Number(opt.game_sentence_count) : DEFAULT_OPTIONS.game_sentence_count;
       currentOptions.enabled_codes = opt.enabled_codes !== undefined ? Number(opt.enabled_codes) : DEFAULT_OPTIONS.enabled_codes;
       currentOptions.farnsworth_timing = opt.farnsworth_timing !== undefined ? Number(opt.farnsworth_timing) : DEFAULT_OPTIONS.farnsworth_timing;
+      currentOptions.explicit_boundary_input = opt.explicit_boundary_input !== undefined ? Number(opt.explicit_boundary_input) : DEFAULT_OPTIONS.explicit_boundary_input;
       currentOptions.version = opt.version !== undefined ? Number(opt.version) : DEFAULT_OPTIONS.version;
       currentOptions.clear_input_source = opt.clear_input_source !== undefined ? Number(opt.clear_input_source) : DEFAULT_OPTIONS.clear_input_source;
       currentOptions.cancel_input_source = opt.cancel_input_source !== undefined ? Number(opt.cancel_input_source) : DEFAULT_OPTIONS.cancel_input_source;
@@ -1101,14 +1174,22 @@ function duplicateInputKeys(sources) {
     function syncPolicy() {
       var name = ['novice_policy','intermediate_policy','advanced_policy'][currentOptions.training_mode];
       var value = currentOptions[name];
-      currentOptions.use_3_units = value & 1 ? 1 : 0;
-      currentOptions.use_7_units = value & 2 ? 1 : 0;
+      currentOptions.use_3_units = currentOptions.explicit_boundary_input === 0 || value & 1 ? 1 : 0;
+      currentOptions.use_7_units = currentOptions.explicit_boundary_input === 0 || value & 2 ? 1 : 0;
     }
     function renderTouchLayout() {
       var vertical = (currentOptions.touch_layout & 2) !== 0;
-      document.getElementById('touch-axis').value = vertical ? '1' : '0';
-      var labels = vertical ? ['위쪽 점·선 / 아래쪽 글자 완성·띄어쓰기','아래쪽 점·선 / 위쪽 글자 완성·띄어쓰기'] : ['왼쪽 점·선 / 오른쪽 글자 완성·띄어쓰기','오른쪽 점·선 / 왼쪽 글자 완성·띄어쓰기'];
+      var axis = document.getElementById('touch-axis');
+      axis.value = vertical ? '1' : '0';
+      axis.disabled = currentOptions.explicit_boundary_input === 0;
+      document.querySelectorAll('.touch-layout-label').forEach(function(label) {
+        label.classList.toggle('inactive', axis.disabled);
+      });
+      var dict = i18nData[currentLang] || i18nData.en;
+      var labels = vertical ? dict.touchLayoutVertical : dict.touchLayoutHorizontal;
       var select = document.getElementById('touch-layout');
+      select.disabled = currentOptions.explicit_boundary_input === 0;
+      select.setAttribute('aria-label', dict.touchLayoutAria);
       select.innerHTML = '';
       labels.forEach(function(label,index) {
         var option = document.createElement('option'); option.value = String(index); option.textContent = label; select.appendChild(option);
@@ -1116,18 +1197,32 @@ function duplicateInputKeys(sources) {
       select.value = String(currentOptions.touch_layout & 1);
     }
     function renderTraining() {
+      document.getElementById('explicit-boundary-input').checked = currentOptions.explicit_boundary_input === 1;
+      document.getElementById('farnsworth-timing').checked = currentOptions.farnsworth_timing === 1;
       renderTouchLayout();
       [['training-mode','training_mode'],['tolerance-percent','tolerance_percent']].forEach(function(pair) {
         document.getElementById(pair[0]).value = String(currentOptions[pair[1]]);
       });
       ['novice','intermediate','advanced'].forEach(function(mode) {
         [1,2,4,8].forEach(function(bit) {
-          document.getElementById('policy-'+mode+'-'+bit).value = currentOptions[mode+'_policy'] & bit ? '1' : '0';
+          var select = document.getElementById('policy-'+mode+'-'+bit);
+          var forced = currentOptions.explicit_boundary_input === 0 && (bit === 1 || bit === 2);
+          select.value = forced || currentOptions[mode+'_policy'] & bit ? '1' : '0';
+          select.disabled = forced;
         });
       });
       syncPolicy();
     }
     function bindTraining() {
+      document.getElementById('explicit-boundary-input').addEventListener('change', function(e) {
+        currentOptions.explicit_boundary_input = e.target.checked ? 1 : 0;
+        renderTraining();
+        validate();
+      });
+      document.getElementById('farnsworth-timing').addEventListener('change', function(e) {
+        currentOptions.farnsworth_timing = e.target.checked ? 1 : 0;
+        validate();
+      });
       document.getElementById('touch-axis').addEventListener('change',function(e) {
         currentOptions.touch_layout = Number(e.target.value) === 1 ? 3 : 0;
         renderTouchLayout(); validate();
@@ -1162,6 +1257,25 @@ function duplicateInputKeys(sources) {
     // ==========================================
     // Language & UI Localization
     // ==========================================
+    function renderPolicyLanguage(dict) {
+      var table = document.querySelector('.mode-policy-table');
+      table.querySelectorAll('thead th').forEach(function(cell, index) {
+        cell.textContent = dict.policyHeaders[index];
+      });
+      table.querySelectorAll('tbody tr').forEach(function(row, index) {
+        row.querySelector('th').textContent = dict.policyRows[index];
+        row.querySelectorAll('select').forEach(function(select, mode) {
+          select.setAttribute('aria-label', dict.policyHeaders[mode + 1] + ': ' + dict.policyRows[index]);
+          var options = select.querySelectorAll('option');
+          if (options.length === 2) {
+            options[0].textContent = dict.policyOff;
+            options[1].textContent = dict.policyOn;
+          } else {
+            options[0].textContent = index === 6 ? dict.policyEbi : dict.policyAlways;
+          }
+        });
+      });
+    }
     function setLanguage(lang) {
       currentLang = lang;
       var dict = i18nData[lang] || i18nData['en'];
@@ -1187,6 +1301,8 @@ function duplicateInputKeys(sources) {
       });
 
       populateAllSelects();
+      renderTouchLayout();
+      renderPolicyLanguage(dict);
       validate();
       renderSentences();
       renderGames();
@@ -1223,7 +1339,15 @@ function duplicateInputKeys(sources) {
       var cancelVal = Number(cancel.value);
       var unitMs = Number(currentOptions.unitMs);
 
-      confirmHelp.textContent = currentLang === 'ko' ? '점·선과 수동 완성·띄어쓰기는 터치로 입력합니다. 보조 버튼은 취소·지우기에만 사용합니다.' : 'Use touch for dots, dashes, manual completion and spaces. Optional buttons only cancel or clear input.';
+      var timingKey = currentOptions.explicit_boundary_input ?
+        (currentOptions.farnsworth_timing ? 'timingEbiOnFarnOn' : 'timingEbiOnFarnOff') :
+        (currentOptions.farnsworth_timing ? 'timingEbiOffFarnOn' : 'timingEbiOffFarnOff');
+      document.getElementById('timing-relationship').textContent = dict[timingKey];
+      document.getElementById('policy-desc').textContent = currentOptions.explicit_boundary_input ? dict.policyDescEbiOn : dict.policyDescEbiOff;
+
+      confirmHelp.textContent = currentOptions.explicit_boundary_input ?
+        (currentLang === 'ko' ? '점·선을 입력한 뒤 지정된 영역을 터치하면 글자를 완성하거나 띄어쓸 수 있습니다.' : 'After entering marks, touch the designated area to finish a character or add a space.') :
+        (currentLang === 'ko' ? '화면 어디에서나 점·선을 입력하세요. 입력을 멈추고 기다리면 글자 완성과 띄어쓰기가 자동으로 처리됩니다.' : 'Enter marks anywhere on the screen. Pauses automatically finish characters and add spaces.');
 
       // Check duplicates
       var isDuplicate = duplicateInputKeys([clearVal,cancelVal]);
@@ -1238,8 +1362,9 @@ function duplicateInputKeys(sources) {
       var isUnitValid = LEVEL_UNITS[level - 1] === unitMs;
 
       // Check Version & Payload
-      var isVersionValid = Number(currentOptions.version) === 11 && [1,2,3].indexOf(Number(currentOptions.enabled_codes)) !== -1 &&
-        [0,1].indexOf(Number(currentOptions.farnsworth_timing)) !== -1;
+      var isVersionValid = Number(currentOptions.version) === 12 && [1,2,3].indexOf(Number(currentOptions.enabled_codes)) !== -1 &&
+        [0,1].indexOf(Number(currentOptions.farnsworth_timing)) !== -1 &&
+        [0,1].indexOf(Number(currentOptions.explicit_boundary_input)) !== -1;
 
       var errorMsg = '';
       if (!isVersionValid) {
@@ -1612,6 +1737,7 @@ function duplicateInputKeys(sources) {
             version: Number(currentOptions.version),
             enabled_codes: Number(currentOptions.enabled_codes),
             farnsworth_timing: Number(currentOptions.farnsworth_timing),
+            explicit_boundary_input: Number(currentOptions.explicit_boundary_input),
             game_interval_ms: Number(currentOptions.game_interval_ms),
             game_minimum_ms: Number(currentOptions.game_minimum_ms),
             game_reset_speed: Number(currentOptions.game_reset_speed),
